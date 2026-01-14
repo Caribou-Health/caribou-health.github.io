@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Caribou Health - AI-powered healthcare platform making care accessible, achievable, and autonomous. Join our waitlist today.">
+    <meta name="keywords" content="healthcare, AI, health tech, patient care, digital health, Caribou Health">
+    <title>Caribou Health – Making Healthcare Accessible</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/logo.png">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-logo">
+                <img src="assets/cura-logo.svg" alt="Caribou Health" class="nav-logo-img" width="40" height="40">
+                <span class="logo-text">Caribou Health</span>
+            </a>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span class="hamburger"></span>
+            </button>
+
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#platform" class="nav-link">Platform</a></li>
+                <li><a href="#careers" class="nav-link">Careers</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="#waitlist" class="nav-link nav-cta">Join Waitlist</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg">
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+            <div class="gradient-orb orb-3"></div>
+        </div>
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Ready to make healthcare
+                    <span class="highlight">accessible</span>,
+                    <span class="highlight">achievable</span>, and
+                    <span class="highlight">autonomous</span>?
+                </h1>
+                <p class="hero-subtitle">
+                    Caribou Health is an AI-powered care companion that helps patients manage their recovery journey with personalized nutrition plans, medication reminders, and physical therapy guidance.
+                </p>
+                <div class="hero-cta">
+                    <a href="#waitlist" class="btn btn-primary">Join the Waitlist</a>
+                    <a href="#about" class="btn btn-secondary">Learn More</a>
+                </div>
+                <div class="app-badges">
+                    <div class="app-badge">
+                        <span class="badge-icon">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                            </svg>
+                        </span>
+                        <span class="badge-text">Soon on App Store</span>
+                    </div>
+                    <div class="app-badge">
+                        <span class="badge-icon">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                            </svg>
+                        </span>
+                        <span class="badge-text">Soon on Google Play</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <!-- Animated Demo Walkthrough -->
+                        <div class="demo-slideshow">
+                            <!-- Screen 1: Intake Form -->
+                            <div class="demo-slide" data-step="1">
+                                <div class="demo-header-bar">
+                                    <span class="demo-step-label">Step 1: Intake</span>
+                                </div>
+                                <div class="demo-content-area">
+                                    <h4>Tell us about yourself</h4>
+                                    <div class="demo-field">
+                                        <label>Name</label>
+                                        <div class="demo-input-display">Cura</div>
+                                    </div>
+                                    <div class="demo-field">
+                                        <label>Diagnosis</label>
+                                        <div class="demo-input-display">Sprained Ankle</div>
+                                    </div>
+                                    <div class="demo-field">
+                                        <label>Diet</label>
+                                        <div class="demo-input-display">Vegetarian</div>
+                                    </div>
+                                    <div class="demo-field">
+                                        <label>Medication</label>
+                                        <div class="demo-input-display">Ibuprofen 200mg 2x/day</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Screen 2: Dashboard -->
+                            <div class="demo-slide" data-step="2">
+                                <div class="demo-header-bar">
+                                    <span class="demo-step-label">Your Dashboard</span>
+                                </div>
+                                <div class="demo-content-area">
+                                    <p class="demo-greeting">Good morning, Cura!</p>
+                                    <div class="demo-progress-circle">
+                                        <span class="progress-number">67%</span>
+                                        <span class="progress-label">Complete</span>
+                                    </div>
+                                    <div class="demo-tasks-preview">
+                                        <div class="demo-task done"><span class="check-icon">&#10003;</span> Morning medication</div>
+                                        <div class="demo-task done"><span class="check-icon">&#10003;</span> Ankle exercises</div>
+                                        <div class="demo-task"><span class="check-icon"></span> Log lunch meal</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Screen 3: Nutrition -->
+                            <div class="demo-slide" data-step="3">
+                                <div class="demo-header-bar">
+                                    <span class="demo-step-label">Nutrition Plan</span>
+                                </div>
+                                <div class="demo-content-area">
+                                    <p class="demo-subtitle">Vegetarian Meal Plan</p>
+                                    <div class="demo-meal-card">
+                                        <strong>Lunch</strong>
+                                        <p>Quinoa Buddha Bowl</p>
+                                        <span class="demo-calories">450 cal</span>
+                                    </div>
+                                    <div class="demo-meal-card">
+                                        <strong>Dinner</strong>
+                                        <p>Lentil Soup + Salad</p>
+                                        <span class="demo-calories">520 cal</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Screen 4: PT Exercises -->
+                            <div class="demo-slide" data-step="4">
+                                <div class="demo-header-bar">
+                                    <span class="demo-step-label">Physical Therapy</span>
+                                </div>
+                                <div class="demo-content-area">
+                                    <p class="demo-subtitle">Ankle Recovery</p>
+                                    <div class="demo-exercise">
+                                        <div class="exercise-icon">&#128694;</div>
+                                        <div class="exercise-info">
+                                            <strong>Ankle Circles</strong>
+                                            <p>10 reps each direction</p>
+                                        </div>
+                                        <span class="check-icon done">&#10003;</span>
+                                    </div>
+                                    <div class="demo-exercise">
+                                        <div class="exercise-icon">&#127939;</div>
+                                        <div class="exercise-info">
+                                            <strong>Toe Raises</strong>
+                                            <p>3 sets of 15</p>
+                                        </div>
+                                        <span class="check-icon"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Screen 5: Medication -->
+                            <div class="demo-slide" data-step="5">
+                                <div class="demo-header-bar">
+                                    <span class="demo-step-label">Medications</span>
+                                </div>
+                                <div class="demo-content-area">
+                                    <div class="demo-med-card">
+                                        <div class="med-icon">&#128138;</div>
+                                        <div class="med-info">
+                                            <strong>Ibuprofen</strong>
+                                            <p>200mg - Twice daily</p>
+                                        </div>
+                                        <span class="med-status taken">Taken</span>
+                                    </div>
+                                    <div class="demo-reminder-box">
+                                        <span class="reminder-icon">&#128276;</span>
+                                        <p>Next dose: 6:00 PM</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Screen 6: Success -->
+                            <div class="demo-slide" data-step="6">
+                                <div class="demo-header-bar">
+                                    <span class="demo-step-label">Great Progress!</span>
+                                </div>
+                                <div class="demo-content-area demo-success">
+                                    <div class="success-medal">&#127942;</div>
+                                    <h4>Week 1 Complete!</h4>
+                                    <p>You've completed 85% of your care plan this week.</p>
+                                    <div class="success-stats">
+                                        <div class="stat"><strong>6</strong> PT sessions</div>
+                                        <div class="stat"><strong>14</strong> meds taken</div>
+                                        <div class="stat"><strong>21</strong> meals logged</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide indicators -->
+                        <div class="demo-indicators">
+                            <span class="indicator active" data-slide="1"></span>
+                            <span class="indicator" data-slide="2"></span>
+                            <span class="indicator" data-slide="3"></span>
+                            <span class="indicator" data-slide="4"></span>
+                            <span class="indicator" data-slide="5"></span>
+                            <span class="indicator" data-slide="6"></span>
+                        </div>
+                    </div>
+                </div>
+                <p class="demo-caption">Sample walkthrough: Cura's sprained ankle recovery journey</p>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll to explore</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">About Us</span>
+                <h2 class="section-title">Because we <span class="highlight">Caribou</span>-t you</h2>
+                <p class="section-subtitle">We're on a mission to transform healthcare through compassionate technology</p>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3>Our Mission</h3>
+                    <p>To empower patients and caregivers with AI-driven tools that make managing health conditions simpler, more intuitive, and less stressful. We believe everyone deserves access to personalized healthcare support.</p>
+                </div>
+
+                <div class="about-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </div>
+                    <h3>Our Approach</h3>
+                    <p>We combine cutting-edge AI with deep empathy for patient experiences. Caribou supports—never replaces—the guidance of healthcare professionals, acting as a caring companion throughout your recovery journey.</p>
+                </div>
+
+                <div class="about-card">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3>Safety First</h3>
+                    <p>Medical safety is at our core. Caribou never provides medical advice or diagnoses—we support your clinician's recommendations with reminders, tracking, and encouragement to help you stay on track.</p>
+                </div>
+            </div>
+
+            <div class="about-story">
+                <div class="story-content">
+                    <h3>Why Caribou?</h3>
+                    <p>The caribou is known for its incredible journeys across vast landscapes, supporting its herd through challenging terrain. Like these remarkable animals, we're here to support you through your health journey—every step of the way.</p>
+                    <p>Founded with the belief that healthcare technology should feel personal, not clinical, Caribou Health brings warmth and encouragement to digital health management.</p>
+                </div>
+                <div class="story-image">
+                    <div class="caribou-illustration">
+                        <img src="assets/cura-logo.svg" alt="Caribou Health - Care for Everyone" class="about-logo-img" width="200" height="200">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Section -->
+    <section class="platform" id="platform">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">The Platform</span>
+                <h2 class="section-title">Your Care Companion</h2>
+                <p class="section-subtitle">Comprehensive support for your health journey</p>
+            </div>
+
+            <div class="platform-content">
+                <div class="features-grid">
+                    <div class="feature-card" data-page="nutrition" tabindex="0">
+                        <div class="feature-icon nutrition">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+                                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                                <line x1="6" y1="1" x2="6" y2="4"/>
+                                <line x1="10" y1="1" x2="10" y2="4"/>
+                                <line x1="14" y1="1" x2="14" y2="4"/>
+                            </svg>
+                        </div>
+                        <h3>Nutrition Planning</h3>
+                        <p>Personalized meal plans tailored to your condition, with recipes, grocery lists, and calorie tracking.</p>
+                                            </div>
+
+                    <div class="feature-card" data-page="medication" tabindex="0">
+                        <div class="feature-icon medication">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10.5 20.5L3.5 13.5C2.5 12.5 2.5 10.5 3.5 9.5L9.5 3.5C10.5 2.5 12.5 2.5 13.5 3.5L20.5 10.5C21.5 11.5 21.5 13.5 20.5 14.5L14.5 20.5C13.5 21.5 11.5 21.5 10.5 20.5Z"/>
+                                <line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/>
+                            </svg>
+                        </div>
+                        <h3>Medication Reminders</h3>
+                        <p>Never miss a dose with smart reminders and tracking for all your prescribed medications.</p>
+                                            </div>
+
+                    <div class="feature-card" data-page="physicaltherapy" tabindex="0">
+                        <div class="feature-icon pt">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="5" r="3"/>
+                                <line x1="12" y1="8" x2="12" y2="16"/>
+                                <path d="M8 21l4-5 4 5"/>
+                                <path d="M6 12l6 2 6-2"/>
+                            </svg>
+                        </div>
+                        <h3>Physical Therapy</h3>
+                        <p>Guided exercises with visual demonstrations and progress tracking for your recovery.</p>
+                                            </div>
+
+                    <div class="feature-card" data-page="home" tabindex="0">
+                        <div class="feature-icon ai">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                        <h3>Care Assistant</h3>
+                        <p>Meet Cura, your friendly companion providing encouragement and support throughout your day.</p>
+                                            </div>
+
+                    <div class="feature-card" data-page="progress" tabindex="0">
+                        <div class="feature-icon tracking">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="20" x2="18" y2="10"/>
+                                <line x1="12" y1="20" x2="12" y2="4"/>
+                                <line x1="6" y1="20" x2="6" y2="14"/>
+                            </svg>
+                        </div>
+                        <h3>Progress Tracking</h3>
+                        <p>Visual dashboards to monitor your recovery journey and celebrate your achievements.</p>
+                                            </div>
+
+                    <div class="feature-card" data-page="profile" tabindex="0">
+                        <div class="feature-icon family">
+                            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <h3>Family Support</h3>
+                        <p>Coordinate care across family members and keep everyone informed and involved.</p>
+                                            </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Careers Section -->
+    <section class="careers" id="careers">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Join Our Team</span>
+                <h2 class="section-title">Caribou is <span class="highlight">hiring!</span></h2>
+                <p class="section-subtitle">Help us build the future of compassionate healthcare technology</p>
+            </div>
+
+            <div class="jobs-grid">
+                <div class="job-card featured">
+                    <div class="job-badge">Now Hiring</div>
+                    <h3>Software Development / Technical Lead</h3>
+                    <div class="job-details">
+                        <span class="job-type">Full-time</span>
+                        <span class="job-location">Remote</span>
+                    </div>
+                    <p>Lead our engineering team in building scalable healthcare solutions. Experience with modern web technologies and a passion for healthcare required.</p>
+                    <ul class="job-requirements">
+                        <li>5+ years software development experience</li>
+                        <li>Experience with React, Node.js, or similar</li>
+                        <li>Healthcare/HIPAA experience a plus</li>
+                        <li>Strong leadership and communication skills</li>
+                    </ul>
+                    <a href="https://docs.google.com/forms/d/e/1FAIpQLSeZgq9e1beT27hYm4J0AP0HYP4QxF0Dj0nV8s0oEYM4qW_p8g/viewform" target="_blank" class="btn btn-primary">Apply Now</a>
+                </div>
+
+                <div class="job-card">
+                    <div class="job-badge upcoming">Opening Soon</div>
+                    <h3>Software Development Intern</h3>
+                    <div class="job-details">
+                        <span class="job-type">Internship</span>
+                        <span class="job-location">Remote</span>
+                    </div>
+                    <p>Join our development team and gain hands-on experience building real healthcare applications that help people every day.</p>
+                    <ul class="job-requirements">
+                        <li>Currently pursuing CS or related degree</li>
+                        <li>Familiarity with JavaScript/TypeScript</li>
+                        <li>Eager to learn and grow</li>
+                        <li>Passion for healthcare technology</li>
+                    </ul>
+                    <button class="btn btn-outline" disabled>Applications Opening Soon</button>
+                </div>
+
+                <div class="job-card">
+                    <div class="job-badge upcoming">Opening Soon</div>
+                    <h3>Creative / UX Design Intern</h3>
+                    <div class="job-details">
+                        <span class="job-type">Internship</span>
+                        <span class="job-location">Remote</span>
+                    </div>
+                    <p>Help shape the visual identity and user experience of Caribou Health. Create designs that bring warmth to healthcare technology.</p>
+                    <ul class="job-requirements">
+                        <li>Portfolio demonstrating UI/UX work</li>
+                        <li>Proficiency in Figma or similar tools</li>
+                        <li>Understanding of accessibility principles</li>
+                        <li>Creative problem-solving mindset</li>
+                    </ul>
+                    <button class="btn btn-outline" disabled>Applications Opening Soon</button>
+                </div>
+            </div>
+
+            <div class="careers-cta">
+                <p>Don't see a role that fits? We're always looking for talented people who share our mission.</p>
+                <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Waitlist Section -->
+    <section class="waitlist" id="waitlist">
+        <div class="container">
+            <div class="waitlist-content">
+                <div class="waitlist-info">
+                    <span class="section-tag">Be First in Line</span>
+                    <h2 class="section-title">Join the <span class="highlight">Waitlist</span></h2>
+                    <p>Be among the first to experience Caribou Health when we launch. Get early access, exclusive updates, and help shape the future of our platform.</p>
+                    <ul class="waitlist-benefits">
+                        <li>
+                            <span class="benefit-icon">✨</span>
+                            <span>Early access to the platform</span>
+                        </li>
+                        <li>
+                            <span class="benefit-icon">📧</span>
+                            <span>Exclusive development updates</span>
+                        </li>
+                        <li>
+                            <span class="benefit-icon">💬</span>
+                            <span>Opportunity to provide feedback</span>
+                        </li>
+                        <li>
+                            <span class="benefit-icon">🎁</span>
+                            <span>Special launch promotions</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="waitlist-form-container">
+                    <form class="waitlist-form" id="waitlistForm">
+                        <div class="form-group">
+                            <label for="waitlist-name">Full Name</label>
+                            <input type="text" id="waitlist-name" name="name" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="waitlist-email">Email Address</label>
+                            <input type="email" id="waitlist-email" name="email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="waitlist-role">I am a...</label>
+                            <select id="waitlist-role" name="role">
+                                <option value="">Select your role</option>
+                                <option value="patient">Patient</option>
+                                <option value="caregiver">Caregiver/Family Member</option>
+                                <option value="provider">Healthcare Provider</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="updates" checked>
+                                <span class="checkmark"></span>
+                                <span>Send me updates about Caribou Health</span>
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">Join the Waitlist</button>
+                        <p class="form-disclaimer">We respect your privacy and will never share your information.</p>
+                    </form>
+                    <div class="form-success" id="formSuccess" style="display: none;">
+                        <div class="success-icon">🦌</div>
+                        <h3>You're on the list!</h3>
+                        <p>Thank you for joining the Caribou Health waitlist. We'll be in touch soon with exciting updates!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Get in Touch</span>
+                <h2 class="section-title">Contact Us</h2>
+                <p class="section-subtitle">Have questions? We'd love to hear from you.</p>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email Us</h4>
+                            <a href="mailto:hello@caribouhealth.com">hello@caribouhealth.com</a>
+                        </div>
+                    </div>
+
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Location</h4>
+                            <p>Based in Canada<br>Serving patients worldwide</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Response Time</h4>
+                            <p>We typically respond within 24-48 hours</p>
+                        </div>
+                    </div>
+
+                    <div class="social-links">
+                        <h4>Follow Us</h4>
+                        <div class="social-icons">
+                            <a href="#" class="social-icon" aria-label="LinkedIn">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="social-icon" aria-label="Twitter">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                </svg>
+                            </a>
+                            <a href="#" class="social-icon" aria-label="Instagram">
+                                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form-container">
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="contact-name">Name</label>
+                                <input type="text" id="contact-name" name="name" placeholder="Your name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email">Email</label>
+                                <input type="email" id="contact-email" name="email" placeholder="your@email.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-subject">Subject</label>
+                            <select id="contact-subject" name="subject">
+                                <option value="">Select a topic</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="partnership">Partnership Opportunity</option>
+                                <option value="careers">Career Question</option>
+                                <option value="press">Press/Media</option>
+                                <option value="support">Support</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-message">Message</label>
+                            <textarea id="contact-message" name="message" rows="5" placeholder="How can we help you?" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#home" class="footer-logo">
+                        <img src="assets/cura-logo.svg" alt="Caribou Health" class="footer-logo-img" width="32" height="32">
+                        <span>Caribou Health</span>
+                    </a>
+                    <p class="footer-tagline">Because we Caribou-t you</p>
+                    <p class="footer-description">AI-powered care companion helping patients manage their health journey with compassion and support.</p>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#platform">Platform</a></li>
+                        <li><a href="#careers">Careers</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-links">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#waitlist">Join Waitlist</a></li>
+                        <li><a href="#careers">Open Positions</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-newsletter">
+                    <h4>Stay Updated</h4>
+                    <p>Subscribe to our newsletter for the latest updates.</p>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <input type="email" placeholder="Enter your email" required>
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Caribou Health. All rights reserved.</p>
+                <p class="disclaimer">Caribou Health is a care support tool and does not provide medical advice, diagnosis, or treatment. Always consult your healthcare provider.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+</body>
+</html>
