@@ -109,7 +109,9 @@ function isValidEmail(email) {
 
 // Google Form configuration for waitlist
 const GOOGLE_FORM_CONFIG = {
+    // Use viewform for prefilled URL approach
     formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeGDdywNmGI5b2qebFiMJN4IJN24JpPcXiVC0fq4bSIVN8BZw/formResponse',
+    viewUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeGDdywNmGI5b2qebFiMJN4IJN24JpPcXiVC0fq4bSIVN8BZw/viewform',
     fields: {
         name: 'entry.733572800',
         email: 'entry.1769692911',
@@ -117,7 +119,7 @@ const GOOGLE_FORM_CONFIG = {
     }
 };
 
-// Handle waitlist form submission - sends to Google Form
+// Handle waitlist form submission - sends to Google Form via hidden iframe
 function handleWaitlistSubmit(e) {
     e.preventDefault();
 
@@ -143,46 +145,83 @@ function handleWaitlistSubmit(e) {
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
 
-    // Create form data for Google Forms
-    const formData = new FormData();
-    formData.append(GOOGLE_FORM_CONFIG.fields.name, name);
-    formData.append(GOOGLE_FORM_CONFIG.fields.email, email);
-    formData.append(GOOGLE_FORM_CONFIG.fields.role, role || 'Not specified');
+    // Map the role value to match Google Form options exactly
+    let googleFormRole = 'Patient'; // default
+    if (role === 'patient') googleFormRole = 'Patient';
+    else if (role === 'caregiver') googleFormRole = 'Caregiver/Family Member';
+    else if (role === 'provider' || role === 'healthcare') googleFormRole = 'Healthcare Provider';
+    else if (role === 'other') googleFormRole = 'Other';
 
-    // Submit to Google Form using fetch with no-cors mode
-    fetch(GOOGLE_FORM_CONFIG.formUrl, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: formData
-    })
-    .then(() => {
-        // Google Forms doesn't return a proper response in no-cors mode
-        // but the submission goes through
+    // Create hidden iframe for form submission
+    const iframeName = 'google-form-iframe-' + Date.now();
+    const iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.cssText = 'position:absolute;width:0;height:0;border:0;left:-9999px;';
+    document.body.appendChild(iframe);
+
+    // Create the form targeting the iframe
+    const googleForm = document.createElement('form');
+    googleForm.method = 'POST';
+    googleForm.action = GOOGLE_FORM_CONFIG.formUrl;
+    googleForm.target = iframeName;
+    googleForm.style.display = 'none';
+
+    // Add the form fields
+    const fields = [
+        { name: GOOGLE_FORM_CONFIG.fields.name, value: name },
+        { name: GOOGLE_FORM_CONFIG.fields.email, value: email },
+        { name: GOOGLE_FORM_CONFIG.fields.role, value: googleFormRole }
+    ];
+
+    fields.forEach(field => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = field.name;
+        input.value = field.value;
+        googleForm.appendChild(input);
+    });
+
+    document.body.appendChild(googleForm);
+
+    // Track if iframe loaded (means form was processed)
+    let submitted = false;
+    iframe.onload = function() {
+        if (submitted) {
+            // Clean up
+            setTimeout(() => {
+                iframe.remove();
+                googleForm.remove();
+            }, 1000);
+        }
+    };
+
+    // Submit the form
+    googleForm.submit();
+    submitted = true;
+
+    // Show success after brief delay
+    setTimeout(() => {
         submitBtn.classList.remove('loading');
         submitBtn.disabled = false;
-
-        // Show success state
         form.style.display = 'none';
         formSuccess.style.display = 'block';
-
         showToast('Successfully joined the waitlist!', 'success');
-    })
-    .catch((error) => {
-        console.error('Form submission error:', error);
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
-        showToast('Something went wrong. Please try again.', 'error');
-    });
+    }, 1000);
 }
 
-// ClickUp Form configuration for contact/feedback
-const CLICKUP_FORM_CONFIG = {
-    formUrl: 'https://forms.clickup.com/9017633221/f/8cqwae5-3037/4K8X5T3K9VRF6A355S',
-    // ClickUp form field IDs (obtained from form inspection)
-    embedUrl: 'https://forms.clickup.com/9017633221/f/8cqwae5-3037/4K8X5T3K9VRF6A355S'
+// Google Form configuration for contact/feedback
+const CONTACT_FORM_CONFIG = {
+    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSejCRGtfjp6MlyRfsI-Em7vMm2TvCpADyz4Q4XKZuNtXLrXSA/formResponse',
+    fields: {
+        name: 'entry.176696630',
+        email: 'entry.66249757',
+        subject: 'entry.1734840493',
+        message: 'entry.1077715039',
+        feedbackSource: 'entry.34887441'
+    }
 };
 
-// Handle contact form submission - submits to ClickUp via hidden iframe
+// Handle contact form submission - submits to Google Form via hidden iframe
 function handleContactSubmit(e) {
     e.preventDefault();
 
@@ -209,69 +248,72 @@ function handleContactSubmit(e) {
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
 
-    // Create a hidden iframe to submit to ClickUp form
-    // This approach allows submission without leaving the page
+    // Map the subject value to match Google Form options exactly
+    let googleFormSubject = 'General Inquiry'; // default
+    if (subject === 'general') googleFormSubject = 'General Inquiry';
+    else if (subject === 'partnership') googleFormSubject = 'Partnership Opportunity';
+    else if (subject === 'careers') googleFormSubject = 'Career Question';
+    else if (subject === 'press') googleFormSubject = 'Press/Media';
+    else if (subject === 'support') googleFormSubject = 'Support';
+
+    // Create hidden iframe for form submission
+    const iframeName = 'contact-form-iframe-' + Date.now();
     const iframe = document.createElement('iframe');
-    iframe.name = 'clickup-submit-frame';
-    iframe.style.display = 'none';
+    iframe.name = iframeName;
+    iframe.style.cssText = 'position:absolute;width:0;height:0;border:0;left:-9999px;';
     document.body.appendChild(iframe);
 
-    // Create a form that targets the iframe
-    const clickupForm = document.createElement('form');
-    clickupForm.method = 'POST';
-    clickupForm.action = CLICKUP_FORM_CONFIG.formUrl;
-    clickupForm.target = 'clickup-submit-frame';
-    clickupForm.style.display = 'none';
+    // Create the form targeting the iframe
+    const googleForm = document.createElement('form');
+    googleForm.method = 'POST';
+    googleForm.action = CONTACT_FORM_CONFIG.formUrl;
+    googleForm.target = iframeName;
+    googleForm.style.display = 'none';
 
-    // Add form fields - ClickUp forms use specific field naming
-    const fields = {
-        'cu-form-control-1': name,
-        'cu-form-control-2': email,
-        'cu-form-control-3': subject || 'General Inquiry',
-        'cu-form-control-4': message
-    };
+    // Add the form fields
+    const fields = [
+        { name: CONTACT_FORM_CONFIG.fields.name, value: name },
+        { name: CONTACT_FORM_CONFIG.fields.email, value: email },
+        { name: CONTACT_FORM_CONFIG.fields.subject, value: googleFormSubject },
+        { name: CONTACT_FORM_CONFIG.fields.message, value: message },
+        { name: CONTACT_FORM_CONFIG.fields.feedbackSource, value: 'Website - Contact Form' }
+    ];
 
-    Object.entries(fields).forEach(([fieldName, value]) => {
+    fields.forEach(field => {
         const input = document.createElement('input');
         input.type = 'hidden';
-        input.name = fieldName;
-        input.value = value;
-        clickupForm.appendChild(input);
+        input.name = field.name;
+        input.value = field.value;
+        googleForm.appendChild(input);
     });
 
-    document.body.appendChild(clickupForm);
+    document.body.appendChild(googleForm);
 
-    // Submit and show success after a brief delay
-    // (ClickUp forms don't provide direct feedback in cross-origin scenarios)
+    // Submit the form
+    googleForm.submit();
+
+    // Show success after brief delay
     setTimeout(() => {
         submitBtn.classList.remove('loading');
         submitBtn.disabled = false;
-        form.reset();
-        showToast('Thank you for your message! We\'ll get back to you soon.', 'success');
 
-        // Store submission locally as backup
-        console.log('Contact form submitted to ClickUp:', { name, email, subject, message });
+        const contactFormSuccess = document.getElementById('contactFormSuccess');
+        if (contactFormSuccess) {
+            form.style.display = 'none';
+            contactFormSuccess.style.display = 'block';
+        }
+
+        showToast('Thank you for your message! We\'ll get back to you soon.', 'success');
 
         // Clean up
         setTimeout(() => {
             iframe.remove();
-            clickupForm.remove();
-        }, 1000);
-    }, 1500);
-
-    // Also send via email fallback by storing in localStorage for potential webhook
-    const submissions = JSON.parse(localStorage.getItem('caribou_contact_submissions') || '[]');
-    submissions.push({
-        timestamp: new Date().toISOString(),
-        name,
-        email,
-        subject,
-        message
-    });
-    localStorage.setItem('caribou_contact_submissions', JSON.stringify(submissions));
+            googleForm.remove();
+        }, 2000);
+    }, 1000);
 }
 
-// Handle newsletter form submission - also sends to Google Form
+// Handle newsletter form submission - shows popup for name then sends to Google Form
 function handleNewsletterSubmit(e) {
     e.preventDefault();
 
@@ -289,37 +331,189 @@ function handleNewsletterSubmit(e) {
         return;
     }
 
+    // Show popup to get name
+    showNewsletterNamePopup(email, form, submitBtn);
+}
+
+// Show popup to collect name for newsletter subscription
+function showNewsletterNamePopup(email, form, submitBtn) {
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'newsletter-popup-overlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        backdrop-filter: blur(4px);
+    `;
+
+    // Create popup
+    const popup = document.createElement('div');
+    popup.className = 'newsletter-popup';
+    popup.style.cssText = `
+        background: linear-gradient(135deg, #1a1f35 0%, #0d1117 100%);
+        border: 1px solid rgba(94, 250, 255, 0.3);
+        border-radius: 16px;
+        padding: 32px;
+        max-width: 400px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    `;
+
+    popup.innerHTML = `
+        <h3 style="font-family: 'DM Serif Display', serif; color: #fff; font-size: 1.5rem; margin-bottom: 8px;">Almost there!</h3>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: 24px; font-size: 0.95rem;">Please enter your name to complete your newsletter subscription.</p>
+        <input type="text" id="newsletter-name-input" placeholder="Enter your name" style="
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        " />
+        <div style="display: flex; gap: 12px;">
+            <button id="newsletter-cancel-btn" style="
+                flex: 1;
+                padding: 12px 20px;
+                background: transparent;
+                border: 1px solid rgba(255,255,255,0.2);
+                border-radius: 8px;
+                color: rgba(255,255,255,0.7);
+                font-size: 0.95rem;
+                cursor: pointer;
+                transition: all 0.3s;
+            ">Cancel</button>
+            <button id="newsletter-submit-btn" style="
+                flex: 1;
+                padding: 12px 20px;
+                background: linear-gradient(135deg, #5efaff 0%, #a78bfa 100%);
+                border: none;
+                border-radius: 8px;
+                color: #0d1117;
+                font-size: 0.95rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s;
+            ">Subscribe</button>
+        </div>
+    `;
+
+    overlay.appendChild(popup);
+    document.body.appendChild(overlay);
+
+    // Focus the input
+    const nameInput = popup.querySelector('#newsletter-name-input');
+    setTimeout(() => nameInput.focus(), 100);
+
+    // Handle input focus styling
+    nameInput.addEventListener('focus', () => {
+        nameInput.style.borderColor = 'rgba(94, 250, 255, 0.5)';
+    });
+    nameInput.addEventListener('blur', () => {
+        nameInput.style.borderColor = 'rgba(255,255,255,0.1)';
+    });
+
+    // Handle cancel
+    const cancelBtn = popup.querySelector('#newsletter-cancel-btn');
+    cancelBtn.addEventListener('click', () => {
+        overlay.remove();
+    });
+
+    // Handle click outside to close
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            overlay.remove();
+        }
+    });
+
+    // Handle submit
+    const popupSubmitBtn = popup.querySelector('#newsletter-submit-btn');
+    popupSubmitBtn.addEventListener('click', () => {
+        const name = nameInput.value.trim();
+        if (!name) {
+            nameInput.style.borderColor = '#ff6b6b';
+            showToast('Please enter your name.', 'error');
+            return;
+        }
+
+        // Remove popup and submit
+        overlay.remove();
+        submitNewsletterForm(name, email, form, submitBtn);
+    });
+
+    // Handle enter key
+    nameInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            popupSubmitBtn.click();
+        }
+    });
+}
+
+// Submit the newsletter form to Google Forms via hidden iframe
+function submitNewsletterForm(name, email, form, submitBtn) {
     // Show loading state
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
 
-    // Create form data for Google Forms
-    const formData = new FormData();
-    formData.append(GOOGLE_FORM_CONFIG.fields.name, 'Newsletter Subscriber');
-    formData.append(GOOGLE_FORM_CONFIG.fields.email, email);
-    formData.append(GOOGLE_FORM_CONFIG.fields.role, 'Newsletter');
+    // Create hidden iframe for form submission
+    const iframeName = 'newsletter-form-iframe-' + Date.now();
+    const iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.cssText = 'position:absolute;width:0;height:0;border:0;left:-9999px;';
+    document.body.appendChild(iframe);
 
-    // Submit to Google Form
-    fetch(GOOGLE_FORM_CONFIG.formUrl, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: formData
-    })
-    .then(() => {
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
+    // Create the form targeting the iframe
+    const googleForm = document.createElement('form');
+    googleForm.method = 'POST';
+    googleForm.action = GOOGLE_FORM_CONFIG.formUrl;
+    googleForm.target = iframeName;
+    googleForm.style.display = 'none';
 
-        // Reset form
-        form.reset();
+    // Add the form fields - use "Other" as role since "Newsletter" isn't a valid Google Form option
+    const fields = [
+        { name: GOOGLE_FORM_CONFIG.fields.name, value: name + ' (Newsletter)' },
+        { name: GOOGLE_FORM_CONFIG.fields.email, value: email },
+        { name: GOOGLE_FORM_CONFIG.fields.role, value: 'Other' }
+    ];
 
-        showToast('Subscribed to newsletter!', 'success');
-    })
-    .catch((error) => {
-        console.error('Newsletter submission error:', error);
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
-        showToast('Something went wrong. Please try again.', 'error');
+    fields.forEach(field => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = field.name;
+        input.value = field.value;
+        googleForm.appendChild(input);
     });
+
+    document.body.appendChild(googleForm);
+
+    // Submit the form
+    googleForm.submit();
+
+    // Show success after brief delay
+    setTimeout(() => {
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled = false;
+        form.reset();
+        showToast('Subscribed to newsletter!', 'success');
+
+        // Clean up
+        setTimeout(() => {
+            iframe.remove();
+            googleForm.remove();
+        }, 2000);
+    }, 1000);
 }
 
 // ============================================

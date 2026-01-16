@@ -1001,16 +1001,48 @@ section {
     line-height: 1.7;
 }
 
-/* About Story */
-.about-story {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-4xl);
+/* About Story Wrapper - Logo separate from text */
+.about-story-wrapper {
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    gap: var(--space-3xl);
+}
+
+.story-logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.caribou-illustration.large-bounce {
+    animation: large-bounce 2s ease-in-out infinite;
+}
+
+.about-logo-img-large {
+    width: 300px;
+    height: 300px;
+    max-width: 100%;
+}
+
+@keyframes large-bounce {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-25px) scale(1.05);
+    }
+}
+
+/* About Story - Text box only */
+.about-story {
+    display: block;
     background: var(--bg-card);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-xl);
     padding: var(--space-3xl);
+    max-width: 800px;
+    width: 100%;
 }
 
 .story-content h3 {
@@ -1018,18 +1050,18 @@ section {
     font-size: var(--text-2xl);
     color: var(--text-white);
     margin-bottom: var(--space-lg);
+    text-align: center;
 }
 
 .story-content p {
     color: var(--text-muted);
     margin-bottom: var(--space-md);
     line-height: 1.7;
+    text-align: center;
 }
 
-.story-image {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.story-content p:last-child {
+    margin-bottom: 0;
 }
 
 .caribou-illustration {
@@ -1676,17 +1708,13 @@ section {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .about-story {
-        grid-template-columns: 1fr;
-        text-align: center;
+    .about-story-wrapper {
+        gap: var(--space-2xl);
     }
 
-    .story-content {
-        order: 2;
-    }
-
-    .story-image {
-        order: 1;
+    .about-logo-img-large {
+        width: 250px;
+        height: 250px;
     }
 
     .waitlist-content {
@@ -2432,6 +2460,32 @@ section {
 .about-logo-img {
     max-width: 200px;
     height: auto;
+}
+
+/* Success logo in waitlist form */
+.success-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.success-logo-img {
+    animation: gentle-bob 2s ease-in-out infinite;
+}
+
+/* Required field indicator */
+.required {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+/* ClickUp Form Container */
+.clickup-form-container {
+    min-height: 550px;
+}
+
+.clickup-form-container iframe {
+    background: transparent !important;
 }
 
 /* Responsive adjustments for demo controls */
