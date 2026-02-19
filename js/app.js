@@ -23,6 +23,8 @@ const formSuccess = document.getElementById('formSuccess');
 let lastScroll = 0;
 
 function handleNavScroll() {
+    if (!navbar) return; // Guard clause for pages without navbar
+
     const currentScroll = window.pageYOffset;
 
     if (currentScroll > 50) {
@@ -36,6 +38,8 @@ function handleNavScroll() {
 
 // Mobile menu toggle
 function toggleMobileMenu() {
+    if (!navToggle || !navMenu) return; // Guard clause for pages without nav elements
+
     navToggle.classList.toggle('active');
     navMenu.classList.toggle('active');
     document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
@@ -43,7 +47,7 @@ function toggleMobileMenu() {
 
 // Close mobile menu when clicking a link
 function handleNavLinkClick(e) {
-    if (navMenu.classList.contains('active')) {
+    if (navMenu && navMenu.classList.contains('active')) {
         toggleMobileMenu();
     }
 
@@ -110,12 +114,12 @@ function isValidEmail(email) {
 // Google Form configuration for waitlist
 const GOOGLE_FORM_CONFIG = {
     // Use viewform for prefilled URL approach
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeGDdywNmGI5b2qebFiMJN4IJN24JpPcXiVC0fq4bSIVN8BZw/formResponse',
-    viewUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSeGDdywNmGI5b2qebFiMJN4IJN24JpPcXiVC0fq4bSIVN8BZw/viewform',
+    formUrl: 'https://docs.google.com/forms/d/e/1nELXqm1xKEaHlgpXp7EDW7dorlha-LlREbjYmhiCOyc/formResponse',
+    viewUrl: 'https://docs.google.com/forms/d/e/1nELXqm1xKEaHlgpXp7EDW7dorlha-LlREbjYmhiCOyc/viewform',
     fields: {
-        name: 'entry.733572800',
-        email: 'entry.1769692911',
-        role: 'entry.1170592026'
+        name: 'entry.1147532320',
+        email: 'entry.1704067018',
+        role: 'entry.1721982950'
     }
 };
 
@@ -211,13 +215,13 @@ function handleWaitlistSubmit(e) {
 
 // Google Form configuration for contact/feedback
 const CONTACT_FORM_CONFIG = {
-    formUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSejCRGtfjp6MlyRfsI-Em7vMm2TvCpADyz4Q4XKZuNtXLrXSA/formResponse',
+    formUrl: 'https://docs.google.com/forms/d/e/1JewgUNveFkVc9ny4bOpB6oLR3AUo41BjGujqRSj-mpA/formResponse',
     fields: {
-        name: 'entry.176696630',
-        email: 'entry.66249757',
-        subject: 'entry.1734840493',
-        message: 'entry.1077715039',
-        feedbackSource: 'entry.34887441'
+        name: 'entry.471354672',
+        email: 'entry.1129247242',
+        subject: 'entry.94761292',
+        message: 'entry.1664704084',
+        feedbackSource: 'entry.2121488763'
     }
 };
 
@@ -532,8 +536,6 @@ function initScrollAnimations() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                // Optionally unobserve after animation
-                // observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
@@ -554,6 +556,7 @@ function initScrollAnimations() {
         grid.classList.add('stagger-children');
         observer.observe(grid);
     });
+
 }
 
 // ============================================
@@ -655,7 +658,7 @@ function initAppDemoAnimation() {
             if (taskIndex < tasks.length) {
                 tasks[taskIndex].classList.add('done');
                 const check = tasks[taskIndex].querySelector('.task-check');
-                if (check) check.textContent = '✓';
+                if (check) check.textContent = '\u2713';
 
                 // Update progress
                 const progress = ((taskIndex + 1) / tasks.length) * 100;
@@ -736,23 +739,27 @@ function animateCounter(element, target, duration = 2000) {
 // ============================================
 
 function initAccessibility() {
-    // Handle keyboard navigation for mobile menu
-    navToggle.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            toggleMobileMenu();
-        }
-    });
+    // Handle keyboard navigation for mobile menu (only if nav elements exist)
+    if (navToggle) {
+        navToggle.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleMobileMenu();
+            }
+        });
+    }
 
     // Trap focus in mobile menu when open
-    navMenu.addEventListener('keydown', (e) => {
-        if (!navMenu.classList.contains('active')) return;
+    if (navMenu) {
+        navMenu.addEventListener('keydown', (e) => {
+            if (!navMenu.classList.contains('active')) return;
 
-        if (e.key === 'Escape') {
-            toggleMobileMenu();
-            navToggle.focus();
-        }
-    });
+            if (e.key === 'Escape') {
+                toggleMobileMenu();
+                if (navToggle) navToggle.focus();
+            }
+        });
+    }
 
     // Skip to main content
     const skipLink = document.createElement('a');
@@ -779,58 +786,101 @@ function initAccessibility() {
 }
 
 // ============================================
-// Initialize
+// Jobs Carousel
 // ============================================
 
-function init() {
-    // Navigation
-    window.addEventListener('scroll', handleNavScroll);
-    window.addEventListener('scroll', updateActiveNavLink);
-    navToggle.addEventListener('click', toggleMobileMenu);
-    navLinks.forEach(link => link.addEventListener('click', handleNavLinkClick));
+function initJobsCarousel() {
+    const wrapper = document.querySelector('.jobs-carousel-wrapper');
+    const carousel = document.querySelector('.jobs-carousel');
+    const prevBtn = document.querySelector('.carousel-prev');
+    const nextBtn = document.querySelector('.carousel-next');
+    const dotsContainer = document.querySelector('.carousel-dots');
 
-    // Forms
-    if (waitlistForm) {
-        waitlistForm.addEventListener('submit', handleWaitlistSubmit);
+    if (!carousel || !prevBtn || !nextBtn || !dotsContainer) return;
+
+    const cards = Array.from(carousel.querySelectorAll('.job-card'));
+    let currentPage = 0;
+
+    function getVisibleCount() {
+        const w = window.innerWidth;
+        if (w <= 768) return 1;
+        if (w <= 1024) return 2;
+        return 3;
     }
-    if (contactForm) {
-        contactForm.addEventListener('submit', handleContactSubmit);
-    }
-    if (newsletterForm) {
-        newsletterForm.addEventListener('submit', handleNewsletterSubmit);
+
+    function getMaxPage() {
+        return Math.max(0, cards.length - getVisibleCount());
     }
 
-    // Animations
-    initScrollAnimations();
-    initSmoothScrolling();
-    initParallaxEffects();
-    initAppDemoAnimation();
-    initTypingEffect();
+    function buildDots() {
+        dotsContainer.innerHTML = '';
+        const totalPages = getMaxPage() + 1;
+        for (let i = 0; i < totalPages; i++) {
+            const dot = document.createElement('button');
+            dot.className = 'carousel-dot' + (i === currentPage ? ' active' : '');
+            dot.setAttribute('aria-label', 'Go to page ' + (i + 1));
+            dot.addEventListener('click', () => goToPage(i));
+            dotsContainer.appendChild(dot);
+        }
+    }
 
-    // Accessibility
-    initAccessibility();
+    function goToPage(page) {
+        const maxPage = getMaxPage();
+        currentPage = Math.max(0, Math.min(page, maxPage));
 
-    // Initial navbar check
-    handleNavScroll();
+        // Calculate translate amount based on card width + gap
+        const gap = parseFloat(getComputedStyle(carousel).gap) || 0;
+        const cardWidth = cards[0].offsetWidth + gap;
+        const offset = currentPage * cardWidth;
+        carousel.style.transform = 'translateX(-' + offset + 'px)';
 
-    console.log('Caribou Health website initialized');
+        updateUI();
+    }
+
+    function updateUI() {
+        const maxPage = getMaxPage();
+        // Update arrows
+        prevBtn.disabled = currentPage <= 0;
+        nextBtn.disabled = currentPage >= maxPage;
+
+        // Update dots
+        const dots = dotsContainer.querySelectorAll('.carousel-dot');
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentPage);
+        });
+    }
+
+    prevBtn.addEventListener('click', () => goToPage(currentPage - 1));
+    nextBtn.addEventListener('click', () => goToPage(currentPage + 1));
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    carousel.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    carousel.addEventListener('touchend', (e) => {
+        const diff = touchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 50) {
+            goToPage(currentPage + (diff > 0 ? 1 : -1));
+        }
+    }, { passive: true });
+
+    // Recalculate on resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (currentPage > getMaxPage()) currentPage = getMaxPage();
+            buildDots();
+            goToPage(currentPage);
+        }, 150);
+    });
+
+    // Initialize
+    buildDots();
+    goToPage(0);
 }
-
-// Wait for DOM to be ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-} else {
-    init();
-}
-
-// ============================================
-// Export for potential module use
-// ============================================
-
-window.CaribouHealth = {
-    showToast,
-    animateCounter
-};
 
 // ============================================
 // Demo Slideshow Animation
@@ -877,7 +927,305 @@ function initDemoSlideshow() {
     });
 }
 
-// Initialize demo slideshow
-document.addEventListener('DOMContentLoaded', () => {
+// ============================================
+// Application Form
+// ============================================
+
+function initApplicationForm() {
+    const form = document.getElementById('applicationForm');
+    if (!form) return;
+
+    // File drop zone handling
+    const dropZone = form.querySelector('.file-drop-zone');
+    const fileInput = form.querySelector('#app-documents');
+    const fileList = form.querySelector('.file-list');
+
+    if (dropZone && fileInput) {
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
+            updateFileList(fileInput.files, fileList);
+        });
+
+        fileInput.addEventListener('change', () => updateFileList(fileInput.files, fileList));
+    }
+
+    // Form submission
+    form.addEventListener('submit', handleApplicationSubmit);
+}
+
+function updateFileList(files, container) {
+    container.innerHTML = '';
+    Array.from(files).forEach(file => {
+        const item = document.createElement('div');
+        item.className = 'file-item';
+        const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+        item.innerHTML = `
+            <span class="file-name">${file.name}</span>
+            <span class="file-size">(${sizeMB} MB)</span>
+        `;
+        container.appendChild(item);
+    });
+}
+
+// Application Form Configuration
+// After running setupForm() in Apps Script, replace these with your actual values:
+const APPLICATION_FORM_CONFIG = {
+    formUrl: 'https://docs.google.com/forms/d/e/1b7ZUaXwD7ZG-0ruTIuJ5zOJtejUzmvQ471TYJC3NTMI/formResponse',
+    fields: {
+        name: 'entry.1136904062',
+        email: 'entry.351461911',
+        role: 'entry.321013124',
+        coverLetter: 'entry.1305207623',
+        deadline: 'entry.1616421931',
+        howHeard: 'entry.174526948'
+    },
+    appsScriptUrl: 'https://script.google.com/macros/s/AKfycbzALAW3LMry4NWRNYaS10UfNDpJsbNbMMwUDQ0mJM8KUUx-K7k16WvBRtEQzAY993sCLg/exec'
+};
+
+// Role label mapping for Google Form (must match exactly)
+const ROLE_LABELS = {
+    'creative-intern': 'Creative Intern',
+    'software-intern': 'Software Development Intern',
+    'public-health': 'Public Health Practicum',
+    'tech-lead': 'Tech Lead'
+};
+
+// Source label mapping for Google Form
+const SOURCE_LABELS = {
+    'linkedin': 'LinkedIn',
+    'university': 'University/College',
+    'referral': 'Friend/Referral',
+    'job-board': 'Job Board',
+    'social-media': 'Social Media',
+    'other': 'Other'
+};
+
+async function handleApplicationSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const submitBtn = form.querySelector('.form-submit-btn');
+
+    // Collect form data
+    const name = form.querySelector('#app-name').value.trim();
+    const email = form.querySelector('#app-email').value.trim();
+    const role = form.querySelector('#app-role').value;
+    const coverLetter = form.querySelector('#app-cover-letter').value.trim();
+    const deadline = form.querySelector('#app-deadline').value;
+    const howHeard = form.querySelector('#app-how-heard').value;
+    const files = form.querySelector('#app-documents').files;
+
+    // Validation
+    if (!name || !email || !role) {
+        showToast('Please fill in all required fields.', 'error');
+        return;
+    }
+
+    if (!isValidEmail(email)) {
+        showToast('Please enter a valid email address.', 'error');
+        return;
+    }
+
+    // Show loading state
+    submitBtn.classList.add('loading');
+    submitBtn.disabled = true;
+    submitBtn.textContent = files.length > 0 ? 'Uploading documents...' : 'Submitting...';
+
+    // Convert files to base64 for upload
+    let fileData = [];
+    if (files.length > 0) {
+        try {
+            fileData = await Promise.all(Array.from(files).map(async (file) => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        resolve({
+                            name: file.name,
+                            type: file.type,
+                            size: file.size,
+                            data: reader.result.split(',')[1] // Remove data:mime;base64, prefix
+                        });
+                    };
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }));
+        } catch (err) {
+            console.warn('File conversion error:', err);
+        }
+    }
+
+    // Method 1: Submit to Google Form via hidden iframe (data backup - no files)
+    if (APPLICATION_FORM_CONFIG.formUrl && APPLICATION_FORM_CONFIG.fields.name) {
+        try {
+            const iframeName = 'app-form-iframe-' + Date.now();
+            const iframe = document.createElement('iframe');
+            iframe.name = iframeName;
+            iframe.style.cssText = 'position:absolute;width:0;height:0;border:0;left:-9999px;';
+            document.body.appendChild(iframe);
+
+            const googleForm = document.createElement('form');
+            googleForm.method = 'POST';
+            googleForm.action = APPLICATION_FORM_CONFIG.formUrl;
+            googleForm.target = iframeName;
+            googleForm.style.display = 'none';
+
+            const roleLabel = ROLE_LABELS[role] || role;
+            const sourceLabel = SOURCE_LABELS[howHeard] || howHeard || '';
+
+            const fields = [
+                { name: APPLICATION_FORM_CONFIG.fields.name, value: name },
+                { name: APPLICATION_FORM_CONFIG.fields.email, value: email },
+                { name: APPLICATION_FORM_CONFIG.fields.role, value: roleLabel },
+                { name: APPLICATION_FORM_CONFIG.fields.coverLetter, value: coverLetter },
+                { name: APPLICATION_FORM_CONFIG.fields.howHeard, value: sourceLabel }
+            ];
+
+            // Date fields in Google Forms need _year, _month, _day suffixes
+            if (deadline && APPLICATION_FORM_CONFIG.fields.deadline) {
+                const d = new Date(deadline);
+                fields.push({ name: APPLICATION_FORM_CONFIG.fields.deadline + '_year', value: d.getFullYear() });
+                fields.push({ name: APPLICATION_FORM_CONFIG.fields.deadline + '_month', value: d.getMonth() + 1 });
+                fields.push({ name: APPLICATION_FORM_CONFIG.fields.deadline + '_day', value: d.getDate() });
+            }
+
+            fields.forEach(field => {
+                if (field.name && field.value) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = field.name;
+                    input.value = field.value;
+                    googleForm.appendChild(input);
+                }
+            });
+
+            document.body.appendChild(googleForm);
+            googleForm.submit();
+
+            // Clean up after submission
+            setTimeout(() => {
+                iframe.remove();
+                googleForm.remove();
+            }, 3000);
+        } catch (err) {
+            console.warn('Google Form submission error:', err);
+        }
+    }
+
+    // Method 2: Submit to Apps Script Web App (creates ClickUp task with attachments)
+    if (APPLICATION_FORM_CONFIG.appsScriptUrl) {
+        try {
+            const payload = {
+                name: name,
+                email: email,
+                role: ROLE_LABELS[role] || role,
+                coverLetter: coverLetter,
+                deadline: deadline,
+                howHeard: SOURCE_LABELS[howHeard] || howHeard || '',
+                files: fileData // Include base64 encoded files
+            };
+
+            // Use fetch with cors mode to actually get a response
+            fetch(APPLICATION_FORM_CONFIG.appsScriptUrl, {
+                method: 'POST',
+                mode: 'no-cors', // Apps Script doesn't support CORS, so we can't read response
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(() => {
+                console.log('Apps Script submission sent with ' + fileData.length + ' file(s)');
+            }).catch(err => {
+                console.warn('Apps Script submission error:', err);
+            });
+        } catch (err) {
+            console.warn('Apps Script fetch error:', err);
+        }
+    }
+
+    // Show success after brief delay (form data is being sent in background)
+    setTimeout(() => {
+        submitBtn.classList.remove('loading');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Application';
+        form.style.display = 'none';
+        document.getElementById('applicationFormSuccess').style.display = 'block';
+
+        if (fileData.length > 0) {
+            showToast(`Application submitted with ${fileData.length} document(s)!`, 'success');
+        } else {
+            showToast('Application submitted successfully!', 'success');
+        }
+    }, 2000);
+}
+
+// ============================================
+// Initialize
+// ============================================
+
+function init() {
+    // Navigation (with null checks for pages that may not have these elements)
+    window.addEventListener('scroll', handleNavScroll);
+    window.addEventListener('scroll', updateActiveNavLink);
+    if (navToggle) {
+        navToggle.addEventListener('click', toggleMobileMenu);
+    }
+    navLinks.forEach(link => link.addEventListener('click', handleNavLinkClick));
+
+    // Forms
+    if (waitlistForm) {
+        waitlistForm.addEventListener('submit', handleWaitlistSubmit);
+    }
+    if (contactForm) {
+        contactForm.addEventListener('submit', handleContactSubmit);
+    }
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', handleNewsletterSubmit);
+    }
+
+    // Animations
+    initScrollAnimations();
+    initSmoothScrolling();
+    initParallaxEffects();
+    initAppDemoAnimation();
+    initTypingEffect();
     initDemoSlideshow();
-});
+    initJobsCarousel();
+
+    // Forms
+    initApplicationForm();
+
+    // Accessibility
+    initAccessibility();
+
+    // Initial navbar check
+    handleNavScroll();
+
+    console.log('Caribou Health website initialized');
+}
+
+// Wait for DOM to be ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
+
+// ============================================
+// Export for potential module use
+// ============================================
+
+window.CaribouHealth = {
+    showToast,
+    animateCounter
+};
