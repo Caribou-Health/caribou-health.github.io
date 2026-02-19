@@ -25,7 +25,9 @@ Desktop.ini
 .env
 .env.local
 .env.*.local
-app/js/backend-config.js
+# Note: app/js/backend-config.js contains Firebase client config (public by design).
+# Firebase security rules protect data, not the API key. Test credentials removed.
+# The .template.js version serves as documentation for new developers.
 
 # --- Dependencies ---
 node_modules/
