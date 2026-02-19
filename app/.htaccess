@@ -1,0 +1,27 @@
+# Caribou Health App - Apache Configuration
+# Ensure index.html is served as default
+
+DirectoryIndex index.html
+
+# Enable URL rewriting
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /app/
+
+    # If the request is not for a file or directory, serve index.html
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.html [L]
+</IfModule>
+
+# Disable directory browsing
+Options -Indexes
+
+# Cache static assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+</IfModule>

@@ -1,0 +1,73 @@
+# ============================================
+# Caribou Health — .gitignore
+# ============================================
+
+# --- OS Files ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# --- Environment & Secrets ---
+.env
+.env.local
+.env.*.local
+app/js/backend-config.js
+
+# --- Dependencies ---
+node_modules/
+bower_components/
+
+# --- Firebase ---
+.firebase/
+.firebaserc
+firebase-debug.log*
+firebase-debug.*.log*
+
+# --- Google Cloud SDK (441MB — install separately) ---
+app/google-cloud-sdk/
+
+# --- Logs ---
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Build & Coverage ---
+build/
+dist/
+coverage/
+.nyc_output/
+*.tgz
+
+# --- Runtime ---
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# --- Misc ---
+.eslintcache
+.node_repl_history
+.yarn-integrity
+.grunt
+lib-cov
+.lock-wscript
+.dataconnect
+*.Rhistory
+.RData
+.Rapp.history

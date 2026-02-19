@@ -1,0 +1,20 @@
+{
+  "firestore": {
+    "database": "(default)",
+    "location": "northamerica-northeast1",
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "auth": {
+    "providers": {
+      "emailPassword": true,
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "Caribou Health",
+        "supportEmail": "team@caribouhealth.ca"
+      }
+    }
+  }
+}
