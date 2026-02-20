@@ -1398,6 +1398,61 @@ section {
 }
 
 /* ============================================
+   Blog Section
+   ============================================ */
+.blog {
+    padding: var(--space-4xl) 0;
+    text-align: center;
+}
+
+.blog-coming-soon {
+    max-width: 700px;
+    margin: var(--space-3xl) auto 0;
+    padding: var(--space-3xl);
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-xl);
+    text-align: center;
+}
+
+.blog-coming-soon-icon {
+    color: var(--accent-cyan);
+    margin-bottom: var(--space-lg);
+}
+
+.blog-coming-soon h3 {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    color: var(--text-white);
+    margin-bottom: var(--space-md);
+}
+
+.blog-coming-soon p {
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+.blog-topics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-xl);
+}
+
+.blog-topic-tag {
+    background: rgba(94, 250, 255, 0.08);
+    color: var(--accent-cyan);
+    padding: 6px 16px;
+    border-radius: 999px;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    border: 1px solid rgba(94, 250, 255, 0.15);
+}
+
+/* ============================================
    Waitlist Section
    ============================================ */
 .waitlist {
@@ -2752,6 +2807,19 @@ section {
 
 .careers-content {
     padding: var(--space-4xl) 0;
+}
+
+.careers-content p {
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+.careers-content h3 {
+    color: var(--text-white);
+}
+
+.careers-content strong {
+    color: var(--text-white);
 }
 
 .unpaid-disclaimer {

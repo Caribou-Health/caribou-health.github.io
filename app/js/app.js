@@ -8791,20 +8791,24 @@ function applyPromoCode() {
 }
 
 /**
- * Local promo code validation (fallback when backend-config.js not loaded)
+ * Promo code validation — always validates via backend API
  */
-function validatePromoCodeLocal(code) {
-  const codes = {
-    'BETATESTER': { discount: 100, type: 'percent', description: 'Free access for beta testers', valid: true, skipPayment: true },
-    'EARLYBIRD': { discount: 50, type: 'percent', description: '50% off first 3 months', valid: true },
-    'LAUNCH2026': { discount: 25, type: 'percent', description: '25% off annual plan', valid: true },
-    'BETA50': { discount: 50, type: 'percent', description: '50% off for beta testers', valid: true },
-    'FAMILY25': { discount: 25, type: 'percent', description: '25% off Family plan', planRestriction: 'family', valid: true },
-    'FREEMONTH': { discount: 100, type: 'percent', description: 'First month free', valid: true },
-    'STUDENT20': { discount: 20, type: 'percent', description: '20% student discount', valid: true }
-  };
-
-  return codes[code] || { valid: false, error: 'Invalid promo code' };
+async function validatePromoCodeLocal(code) {
+  try {
+    const token = AuthService.currentUser ? await AuthService.currentUser.getIdToken() : null;
+    const response = await fetch(`${BackendConfig.endpoints.baseUrl}${BackendConfig.endpoints.promoCodes}/validate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      },
+      body: JSON.stringify({ code })
+    });
+    const result = await response.json();
+    return result.valid ? result : { valid: false, error: result.error || 'Invalid promo code' };
+  } catch (error) {
+    return { valid: false, error: 'Unable to validate promo code. Please check your connection.' };
+  }
 }
 
 /**
@@ -8905,14 +8909,7 @@ async function handleAdminLogin(event) {
   if (typeof AuthService !== 'undefined') {
     result = await AuthService.adminLogin(email, password);
   } else {
-    // Local admin check
-    const adminEmails = ['caleigh@caribouhealth.ca', 'kanny@caribouhealth.ca', 'admin@caribouhealth.ca'];
-    if (adminEmails.includes(email) && password === 'CaribouAdmin2026!') {
-      result = { success: true, isAdmin: true };
-      AppState.isAdmin = true;
-    } else {
-      result = { success: false, error: 'Invalid admin credentials' };
-    }
+    result = { success: false, error: 'Admin login requires an internet connection. Please check your connection and try again.' };
   }
 
   if (result.success && result.isAdmin) {
@@ -11839,6 +11836,12 @@ async function handleSignup(event) {
 
   if (password.length < 6) {
     alert('Password must be at least 6 characters.');
+    return;
+  }
+
+  const termsAccepted = document.getElementById('signup-terms')?.checked;
+  if (!termsAccepted) {
+    alert('Please agree to the Terms of Service and Privacy Policy to continue.');
     return;
   }
 

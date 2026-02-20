@@ -84,6 +84,17 @@ const AuthService = {
   authStateListeners: [],
 
   /**
+   * Hash a password using SHA-256 via SubtleCrypto
+   */
+  async hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  },
+
+  /**
    * Initialize Firebase Authentication
    * Call this when the app starts
    */
@@ -160,7 +171,7 @@ const AuthService = {
   /**
    * Local signup (fallback)
    */
-  localSignUp(email, password, userData) {
+  async localSignUp(email, password, userData) {
     const accounts = JSON.parse(localStorage.getItem('caribou_accounts') || '{}');
 
     if (accounts[email]) {
@@ -176,7 +187,7 @@ const AuthService = {
     };
 
     accounts[email] = {
-      passwordHash: btoa(password), // Simple encoding (not secure - for demo only)
+      passwordHash: await this.hashPassword(password),
       user: user,
       appState: null
     };
@@ -211,7 +222,7 @@ const AuthService = {
   /**
    * Local signin (fallback)
    */
-  localSignIn(email, password) {
+  async localSignIn(email, password) {
     const accounts = JSON.parse(localStorage.getItem('caribou_accounts') || '{}');
     const account = accounts[email];
 
@@ -219,7 +230,8 @@ const AuthService = {
       return { success: false, error: 'No account found with this email.' };
     }
 
-    if (account.passwordHash !== btoa(password)) {
+    const hash = await this.hashPassword(password);
+    if (account.passwordHash !== hash) {
       return { success: false, error: 'Incorrect password.' };
     }
 
@@ -700,54 +712,32 @@ const SubscriptionService = {
 // ============================================
 
 const PromoCodeService = {
-  // Predefined promo codes (in production, these would be in the database)
-  codes: {
-    'BETATESTER': { discount: 100, type: 'percent', description: 'Free access for beta testers', skipPayment: true, maxUses: 500, expiresAt: '2026-12-31' },
-    'EARLYBIRD': { discount: 50, type: 'percent', description: '50% off first 3 months', maxUses: 100, expiresAt: '2026-06-30' },
-    'LAUNCH2026': { discount: 25, type: 'percent', description: '25% off annual plan', maxUses: 500, expiresAt: '2026-12-31' },
-    'BETA50': { discount: 50, type: 'percent', description: '50% off for beta testers', maxUses: 50, expiresAt: '2026-03-31' },
-    'FAMILY25': { discount: 25, type: 'percent', description: '25% off Family plan', planRestriction: 'family', maxUses: 200, expiresAt: '2026-12-31' },
-    'FREEMONTH': { discount: 100, type: 'percent', description: 'First month free', duration: 1, maxUses: 100, expiresAt: '2026-06-30' },
-    'STUDENT20': { discount: 20, type: 'percent', description: '20% student discount', requiresVerification: true, maxUses: 1000, expiresAt: '2027-12-31' }
-  },
-
   /**
-   * Validate a promo code
+   * Validate a promo code via backend API
    */
-  validateCode(code) {
+  async validateCode(code) {
     const normalizedCode = code.toUpperCase().trim();
-    const promo = this.codes[normalizedCode];
-
-    if (!promo) {
-      return { valid: false, error: 'Invalid promo code' };
+    try {
+      const token = AuthService.currentUser ? await AuthService.currentUser.getIdToken() : null;
+      const response = await fetch(`${BackendConfig.endpoints.baseUrl}${BackendConfig.endpoints.promoCodes}/validate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({ code: normalizedCode })
+      });
+      return await response.json();
+    } catch (error) {
+      return { valid: false, error: 'Unable to validate promo code. Please check your connection.' };
     }
-
-    // Check expiration
-    if (new Date() > new Date(promo.expiresAt)) {
-      return { valid: false, error: 'This promo code has expired' };
-    }
-
-    // Check usage count (would be tracked in database in production)
-    const usageCount = this.getCodeUsageCount(normalizedCode);
-    if (usageCount >= promo.maxUses) {
-      return { valid: false, error: 'This promo code has reached its maximum uses' };
-    }
-
-    return {
-      valid: true,
-      code: normalizedCode,
-      discount: promo.discount,
-      type: promo.type,
-      description: promo.description,
-      planRestriction: promo.planRestriction || null
-    };
   },
 
   /**
    * Apply promo code to a plan
    */
-  applyToPrice(originalPrice, promoCode) {
-    const validation = this.validateCode(promoCode);
+  async applyToPrice(originalPrice, promoCode) {
+    const validation = await this.validateCode(promoCode);
 
     if (!validation.valid) {
       return { success: false, error: validation.error, finalPrice: originalPrice };
@@ -768,29 +758,6 @@ const PromoCodeService = {
       finalPrice: finalPrice,
       description: validation.description
     };
-  },
-
-  /**
-   * Get usage count for a code (local simulation)
-   */
-  getCodeUsageCount(code) {
-    const usage = JSON.parse(localStorage.getItem('caribou_promo_usage') || '{}');
-    return usage[code] || 0;
-  },
-
-  /**
-   * Record code usage
-   */
-  recordUsage(code, userId) {
-    const usage = JSON.parse(localStorage.getItem('caribou_promo_usage') || '{}');
-    usage[code] = (usage[code] || 0) + 1;
-    localStorage.setItem('caribou_promo_usage', JSON.stringify(usage));
-
-    // Also record which users used which codes
-    const userPromos = JSON.parse(localStorage.getItem('caribou_user_promos') || '{}');
-    if (!userPromos[userId]) userPromos[userId] = [];
-    userPromos[userId].push({ code, usedAt: new Date().toISOString() });
-    localStorage.setItem('caribou_user_promos', JSON.stringify(userPromos));
   }
 };
 
