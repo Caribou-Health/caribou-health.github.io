@@ -1019,10 +1019,13 @@ const APPLICATION_FORM_CONFIG = {
 
 // Role label mapping for Google Form (must match exactly)
 const ROLE_LABELS = {
-    'creative-intern': 'Creative Intern',
+    'creative-intern': 'Creative Design Intern',
     'software-intern': 'Software Development Intern',
     'public-health': 'Public Health Practicum',
-    'tech-lead': 'Tech Lead'
+    'tech-lead': 'Tech Lead',
+    'clinical-advisor': 'Clinical Advisor',
+    'business-development': 'Business Development & Partnerships Lead',
+    'content-manager': 'Community & Content Manager'
 };
 
 // Source label mapping for Google Form
