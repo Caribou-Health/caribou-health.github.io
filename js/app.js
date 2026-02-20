@@ -540,21 +540,26 @@ function initScrollAnimations() {
         });
     }, observerOptions);
 
-    // Observe all elements with fade-in class
-    document.querySelectorAll('.fade-in, .stagger-children').forEach(el => {
-        observer.observe(el);
-    });
-
-    // Add fade-in class to sections
+    // Add fade-in class to sections that don't already have it
     document.querySelectorAll('section').forEach(section => {
-        section.classList.add('fade-in');
-        observer.observe(section);
+        if (!section.classList.contains('fade-in')) {
+            section.classList.add('fade-in');
+        }
     });
 
     // Add stagger animation to grids
     document.querySelectorAll('.about-grid, .features-grid, .jobs-grid').forEach(grid => {
-        grid.classList.add('stagger-children');
-        observer.observe(grid);
+        if (!grid.classList.contains('stagger-children')) {
+            grid.classList.add('stagger-children');
+        }
+    });
+
+    // Observe all fade-in and stagger-children elements in one pass
+    // Use requestAnimationFrame to ensure layout is settled before observing
+    requestAnimationFrame(() => {
+        document.querySelectorAll('.fade-in, .stagger-children').forEach(el => {
+            observer.observe(el);
+        });
     });
 
 }
