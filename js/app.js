@@ -554,12 +554,29 @@ function initScrollAnimations() {
         }
     });
 
-    // Observe all fade-in and stagger-children elements in one pass
-    // Use requestAnimationFrame to ensure layout is settled before observing
-    requestAnimationFrame(() => {
-        document.querySelectorAll('.fade-in, .stagger-children').forEach(el => {
-            observer.observe(el);
+    // Collect all animatable elements
+    const animatableEls = document.querySelectorAll('.fade-in, .stagger-children');
+
+    // Helper: check if element is in viewport and mark visible
+    function checkVisibility() {
+        animatableEls.forEach(el => {
+            if (el.classList.contains('visible')) return;
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight + 50 && rect.bottom > 0) {
+                el.classList.add('visible');
+            }
         });
+    }
+
+    // Observe elements for future scroll-triggered reveals
+    animatableEls.forEach(el => {
+        observer.observe(el);
+    });
+
+    // Fallback: manually check elements already in viewport on load
+    // IntersectionObserver initial callback can miss elements already visible
+    requestAnimationFrame(() => {
+        checkVisibility();
     });
 
 }
