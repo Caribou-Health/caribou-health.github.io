@@ -1017,14 +1017,14 @@ const APPLICATION_FORM_CONFIG = {
     appsScriptUrl: 'https://script.google.com/macros/s/AKfycbzALAW3LMry4NWRNYaS10UfNDpJsbNbMMwUDQ0mJM8KUUx-K7k16WvBRtEQzAY993sCLg/exec'
 };
 
-// Role label mapping for Google Form (must match exactly)
+// Role label mapping - must match ROLE_MAP keys in ClickUpBridge.gs
 const ROLE_LABELS = {
-    'creative-intern': 'Creative Design Intern',
+    'creative-intern': 'Creative Intern',
     'software-intern': 'Software Development Intern',
     'public-health': 'Public Health Practicum',
     'tech-lead': 'Tech Lead',
     'clinical-advisor': 'Clinical Advisor',
-    'business-development': 'Business Development & Partnerships Lead',
+    'business-development': 'Business Development Lead',
     'content-manager': 'Community & Content Manager'
 };
 
@@ -1162,14 +1162,16 @@ async function handleApplicationSubmit(e) {
                 files: fileData // Include base64 encoded files
             };
 
-            // Use fetch with cors mode to actually get a response
+            // Send as text/plain to avoid CORS preflight with Apps Script
             fetch(APPLICATION_FORM_CONFIG.appsScriptUrl, {
                 method: 'POST',
-                mode: 'no-cors', // Apps Script doesn't support CORS, so we can't read response
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).then(() => {
-                console.log('Apps Script submission sent with ' + fileData.length + ' file(s)');
+                body: JSON.stringify(payload),
+                redirect: 'follow'
+            }).then(resp => {
+                if (resp.ok) return resp.json();
+                throw new Error('Apps Script responded with status ' + resp.status);
+            }).then(data => {
+                console.log('Apps Script submission success:', data);
             }).catch(err => {
                 console.warn('Apps Script submission error:', err);
             });

@@ -35,18 +35,24 @@ var CUSTOM_FIELDS = {
   recruiterNotes: 'f76855fe-e276-4682-9a45-b0aa19faa17f'
 };
 
-// Role mapping: Google Form value -> ClickUp dropdown option ID
+// Role mapping: form value -> ClickUp dropdown option UUID
+// These must match the ROLE_LABELS values sent from app.js
 var ROLE_MAP = {
   'Tech Lead': '616b9772-ae19-4ec8-a3d1-756242ce3b45',
   'Public Health Practicum': '548ab690-8696-457c-9e94-f41762b22d03',
   'Software Development Intern': '2fa053e5-4999-4ced-9b03-9299dbb87e0b',
-  'Creative Intern': 'faac4e9d-6162-460d-9e73-540f37df9944'
+  'Creative Intern': 'faac4e9d-6162-460d-9e73-540f37df9944',
+  'Clinical Advisor': null,
+  'Business Development Lead': null,
+  'Community & Content Manager': null
 };
 
-// Source mapping: Google Form value -> ClickUp dropdown option index
+// Source mapping: form value -> ClickUp dropdown option orderindex
+// ClickUp options: 0=Job Board, 1=Referral, 2=Social Media, 3=Company Website,
+// 4=Recruitment Agency, 5=Networking Event, 6=LinkedIn, 7=Google Forms, 8=Email
 var SOURCE_MAP = {
   'LinkedIn': 6,
-  'University/College': 0,
+  'University/College': 3,
   'Friend/Referral': 1,
   'Job Board': 0,
   'Social Media': 2,
