@@ -3,6 +3,11 @@
  * Google Apps Script Web App
  * Deployed under: curahealthteam@gmail.com
  *
+ * NOTE: Google Apps Script 302 redirects convert POST to GET, so this
+ * script uses doGet() with a ?data= query parameter for all submissions.
+ * File attachments are handled separately via doPost() which works when
+ * called from Apps Script itself (not from browser fetch).
+ *
  * SETUP INSTRUCTIONS:
  * 1. Go to https://script.google.com (logged in as curahealthteam@gmail.com)
  * 2. Open the "Caribou ClickUp Bridge" project (or create new and paste this)
@@ -57,126 +62,55 @@ var SOURCE_MAP = {
 
 
 /**
- * RUN THIS FIRST - Creates the Google Form and logs its details
+ * Web App GET endpoint - handles application submissions via ?data= parameter
+ * Google Apps Script redirects convert POST to GET, so we use GET for everything.
+ * The frontend sends JSON-encoded form data as a URL query parameter.
  */
-function setupForm() {
-  var form = FormApp.create('Caribou Health - Job Application');
-  form.setDescription('Application form for open positions at Caribou Health');
-  form.setConfirmationMessage('Thank you for applying! We will review your application and be in touch.');
-
-  // Q1: Full Name (required)
-  form.addTextItem()
-    .setTitle('Full Name')
-    .setRequired(true);
-
-  // Q2: Email (required)
-  form.addTextItem()
-    .setTitle('Email Address')
-    .setRequired(true);
-
-  // Q3: Open Role (required dropdown)
-  form.addListItem()
-    .setTitle('Open Role')
-    .setChoiceValues(['Creative Intern', 'Software Development Intern', 'Public Health Practicum', 'Tech Lead'])
-    .setRequired(true);
-
-  // Q4: Cover Letter (optional paragraph)
-  form.addParagraphTextItem()
-    .setTitle('Cover Letter');
-
-  // Q5: Application Deadline (optional date)
-  form.addDateItem()
-    .setTitle('Application Deadline');
-
-  // Q6: How did you hear about us? (optional dropdown)
-  form.addListItem()
-    .setTitle('How did you hear about us?')
-    .setChoiceValues(['LinkedIn', 'University/College', 'Friend/Referral', 'Job Board', 'Social Media', 'Other']);
-
-  // Get form details
-  var formUrl = form.getPublishedUrl();
-  var editUrl = form.getEditUrl();
-  var formId = form.getId();
-
-  // Extract entry IDs for each question
-  var items = form.getItems();
-  var entryIds = {};
-  for (var i = 0; i < items.length; i++) {
-    var item = items[i];
-    entryIds[item.getTitle()] = 'entry.' + item.getId();
+function doGet(e) {
+  // If no data parameter, return API status
+  if (!e.parameter.data) {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'ok', message: 'Caribou Health Application API'
+    })).setMimeType(ContentService.MimeType.JSON);
   }
 
-  Logger.log('========================================');
-  Logger.log('FORM CREATED SUCCESSFULLY!');
-  Logger.log('========================================');
-  Logger.log('');
-  Logger.log('Form URL (public): ' + formUrl);
-  Logger.log('Edit URL: ' + editUrl);
-  Logger.log('');
-  Logger.log('Response URL (for website POST):');
-  Logger.log('https://docs.google.com/forms/d/e/' + formId + '/formResponse');
-  Logger.log('');
-  Logger.log('Entry IDs (copy these to app.js):');
-  for (var title in entryIds) {
-    Logger.log('  ' + title + ': ' + entryIds[title]);
-  }
-  Logger.log('');
-  Logger.log('========================================');
-  Logger.log('NEXT STEPS:');
-  Logger.log('1. Copy the Response URL and Entry IDs above');
-  Logger.log('2. Update APPLICATION_FORM_CONFIG in js/app.js');
-  Logger.log('3. Add your ClickUp API token to Script Properties');
-  Logger.log('4. Deploy this script as a Web App');
-  Logger.log('========================================');
-
-  // Set up form submit trigger for ClickUp integration
-  ScriptApp.newTrigger('onFormSubmit')
-    .forForm(form)
-    .onFormSubmit()
-    .create();
-
-  Logger.log('Form submit trigger created - new submissions will auto-create ClickUp tasks.');
-}
-
-
-/**
- * Triggered when the Google Form receives a submission
- * Creates a task in ClickUp Candidate Pipeline
- */
-function onFormSubmit(e) {
-  var responses = e.response.getItemResponses();
-  var data = {};
-  for (var i = 0; i < responses.length; i++) {
-    data[responses[i].getItem().getTitle()] = responses[i].getResponse();
-  }
-
-  var name = data['Full Name'] || '';
-  var email = data['Email Address'] || '';
-  var role = data['Open Role'] || '';
-  var coverLetter = data['Cover Letter'] || '';
-  var deadline = data['Application Deadline'] || '';
-  var howHeard = data['How did you hear about us?'] || '';
-
-  // Log to sheet for backup
-  logToSheet(name, email, role, coverLetter, deadline, howHeard, 0);
-
-  // Create ClickUp task
   try {
+    var data = JSON.parse(e.parameter.data);
+    var name = data.name || '';
+    var email = data.email || '';
+    var role = data.role || '';
+    var coverLetter = data.coverLetter || '';
+    var deadline = data.deadline || '';
+    var howHeard = data.howHeard || '';
+
+    logToSheet(name, email, role, coverLetter, deadline, howHeard, 0);
+
     var token = PropertiesService.getScriptProperties().getProperty('CLICKUP_API_TOKEN');
     if (token) {
       var result = createClickUpTask(token, name, email, role, coverLetter, deadline, howHeard);
-      Logger.log('ClickUp task created: ' + result.url);
-    } else {
-      Logger.log('No CLICKUP_API_TOKEN set in Script Properties. Submission logged to sheet only.');
+
+      return ContentService.createTextOutput(JSON.stringify({
+        success: true, taskId: result.id, taskUrl: result.url
+      })).setMimeType(ContentService.MimeType.JSON);
     }
+
+    return ContentService.createTextOutput(JSON.stringify({
+      success: true, message: 'Logged to sheet (no ClickUp token configured)'
+    })).setMimeType(ContentService.MimeType.JSON);
+
   } catch (err) {
-    Logger.log('ClickUp error: ' + err.message);
+    Logger.log('doGet error: ' + err.message);
+    return ContentService.createTextOutput(JSON.stringify({
+      success: false, error: err.message
+    })).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
 
 /**
- * Web App endpoint - handles direct POST from website
+ * Web App POST endpoint - kept for backwards compatibility
+ * Note: Browser fetch POST requests get converted to GET by Google's 302 redirect.
+ * This handler still works when called from server-side contexts (e.g. other Apps Scripts).
  */
 function doPost(e) {
   try {
@@ -187,7 +121,7 @@ function doPost(e) {
     var coverLetter = data.coverLetter || '';
     var deadline = data.deadline || '';
     var howHeard = data.howHeard || '';
-    var files = data.files || []; // Array of {name, type, size, data} objects
+    var files = data.files || [];
 
     logToSheet(name, email, role, coverLetter, deadline, howHeard, files.length);
 
@@ -195,7 +129,6 @@ function doPost(e) {
     if (token) {
       var result = createClickUpTask(token, name, email, role, coverLetter, deadline, howHeard);
 
-      // Upload files as attachments to the ClickUp task
       if (files.length > 0 && result.id) {
         var attachmentResults = [];
         for (var i = 0; i < files.length; i++) {
@@ -233,14 +166,12 @@ function doPost(e) {
  * Upload a file attachment to a ClickUp task
  */
 function uploadFileToClickUp(token, taskId, fileObj) {
-  // Decode base64 file data
   var fileBlob = Utilities.newBlob(
     Utilities.base64Decode(fileObj.data),
     fileObj.type,
     fileObj.name
   );
 
-  // ClickUp attachment API requires multipart form data
   var boundary = '----WebKitFormBoundary' + Utilities.getUuid();
 
   var payload = Utilities.newBlob(
@@ -272,12 +203,6 @@ function uploadFileToClickUp(token, taskId, fileObj) {
   }
 
   return JSON.parse(response.getContentText());
-}
-
-function doGet(e) {
-  return ContentService.createTextOutput(JSON.stringify({
-    status: 'ok', message: 'Caribou Health Application API'
-  })).setMimeType(ContentService.MimeType.JSON);
 }
 
 
@@ -348,4 +273,18 @@ function logToSheet(name, email, role, coverLetter, deadline, howHeard, fileCoun
     sheet.appendRow(['Timestamp', 'Name', 'Email', 'Role', 'Cover Letter', 'Deadline', 'How Heard', 'Files Uploaded']);
   }
   sheet.appendRow([new Date(), name, email, role, coverLetter, deadline, howHeard, fileCount || 0]);
+}
+
+
+/**
+ * Test function - run this to verify authorization and ClickUp connection
+ */
+function testAuth() {
+  var token = PropertiesService.getScriptProperties().getProperty('CLICKUP_API_TOKEN');
+  Logger.log('Token exists: ' + (token ? 'yes' : 'no'));
+  var response = UrlFetchApp.fetch('https://api.clickup.com/api/v2/team', {
+    headers: { Authorization: token },
+    muteHttpExceptions: true
+  });
+  Logger.log('ClickUp response: ' + response.getResponseCode());
 }

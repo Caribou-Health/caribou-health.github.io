@@ -1149,7 +1149,10 @@ async function handleApplicationSubmit(e) {
         }
     }
 
-    // Method 2: Submit to Apps Script Web App (creates ClickUp task with attachments)
+    // Method 2: Submit to Apps Script Web App (creates ClickUp task)
+    // Note: Apps Script 302 redirects convert POST to GET, so we send
+    // the form data as a JSON-encoded ?data= query parameter via GET.
+    // File attachments are excluded (too large for URLs) - users email them separately.
     if (APPLICATION_FORM_CONFIG.appsScriptUrl) {
         try {
             const payload = {
@@ -1158,16 +1161,14 @@ async function handleApplicationSubmit(e) {
                 role: ROLE_LABELS[role] || role,
                 coverLetter: coverLetter,
                 deadline: deadline,
-                howHeard: SOURCE_LABELS[howHeard] || howHeard || '',
-                files: fileData // Include base64 encoded files
+                howHeard: SOURCE_LABELS[howHeard] || howHeard || ''
             };
 
-            // Send as text/plain to avoid CORS preflight with Apps Script
-            fetch(APPLICATION_FORM_CONFIG.appsScriptUrl, {
-                method: 'POST',
-                body: JSON.stringify(payload),
-                redirect: 'follow'
-            }).then(resp => {
+            const dataParam = encodeURIComponent(JSON.stringify(payload));
+            const url = APPLICATION_FORM_CONFIG.appsScriptUrl + '?data=' + dataParam;
+
+            fetch(url, { redirect: 'follow' })
+            .then(resp => {
                 if (resp.ok) return resp.json();
                 throw new Error('Apps Script responded with status ' + resp.status);
             }).then(data => {
