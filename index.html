@@ -32,13 +32,19 @@
             </button>
 
             <ul class="nav-menu" id="navMenu">
-                <li><a href="#home" class="nav-link active">Home</a></li>
-                <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#platform" class="nav-link">Platform</a></li>
-                <li><a href="#waitlist" class="nav-link">Try Beta</a></li>
-                <li><a href="/careers" class="nav-link">Careers</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-                <li><a href="#waitlist" class="nav-link nav-cta">Join Waitlist</a></li>
+                <li><a href="#home" class="nav-link active" data-i18n-website="nav_home">Home</a></li>
+                <li><a href="#about" class="nav-link" data-i18n-website="nav_about">About</a></li>
+                <li><a href="#platform" class="nav-link" data-i18n-website="nav_platform">Platform</a></li>
+                <li><a href="#waitlist" class="nav-link" data-i18n-website="nav_beta">Try Beta</a></li>
+                <li><a href="/careers" class="nav-link" data-i18n-website="nav_careers">Careers</a></li>
+                <li><a href="#contact" class="nav-link" data-i18n-website="nav_contact">Contact</a></li>
+                <li><a href="/beta-survey" class="nav-link" data-i18n-website="nav_survey">Beta Feedback</a></li>
+                <li><a href="#waitlist" class="nav-link nav-cta" data-i18n-website="nav_waitlist">Join Waitlist</a></li>
+                <li>
+                  <button id="website-lang-btn" onclick="toggleWebsiteLanguage()" class="website-lang-toggle" style="border:1.5px solid #4A9B9B;color:#4A9B9B;background:transparent;border-radius:20px;padding:5px 14px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:0.04em;">
+                    FR
+                  </button>
+                </li>
             </ul>
         </div>
     </nav>
@@ -928,5 +934,119 @@
 
     <!-- Scripts -->
     <script src="js/app.js"></script>
+    <!-- Website i18n: Canadian French / English -->
+    <script>
+    // ============================================================
+    // Caribou Website — Canadian French Translation System
+    // ============================================================
+    const WebsiteI18n = {
+      language: localStorage.getItem('caribou_website_lang') || 'en',
+
+      translations: {
+        en: {
+          nav_home: 'Home', nav_about: 'About', nav_platform: 'Platform',
+          nav_beta: 'Try Beta', nav_careers: 'Careers', nav_contact: 'Contact',
+          nav_survey: 'Beta Feedback', nav_waitlist: 'Join Waitlist',
+          hero_title_1: 'Ready to make healthcare',
+          hero_accessible: 'accessible',
+          hero_achievable: 'achievable',
+          hero_autonomous: 'autonomous',
+          hero_subtitle: 'Caribou Health is your personalized care companion that helps patients manage their recovery journey with tailored nutrition plans, medication reminders, and physical therapy guidance—all designed around your unique needs.',
+          hero_cta_join: 'Join the Waitlist',
+          hero_cta_learn: 'Learn More',
+          hero_app_store: 'Soon on App Store',
+          hero_google_play: 'Soon on Google Play',
+          about_title: 'Making Healthcare Accessible',
+          about_subtitle: 'We believe that every patient deserves a care companion that meets them where they are.',
+          platform_title: 'Your Complete Care Platform',
+          platform_subtitle: 'Everything you need to manage your health journey in one place.',
+          waitlist_title: 'Join the Waitlist',
+          waitlist_subtitle: 'Be among the first to experience personalized care with Caribou Health.',
+          contact_title: 'Get in Touch',
+          footer_rights: 'Caribou Holistic Healthcare Inc. All rights reserved.',
+          footer_disclaimer: 'Caribou Health is a care support tool and does not provide medical advice, diagnosis, or treatment. Always consult your healthcare provider.',
+          footer_newsletter_title: 'Stay Updated',
+          footer_newsletter_sub: 'Subscribe to our newsletter for the latest updates.',
+          footer_subscribe: 'Subscribe',
+          footer_email_placeholder: 'Enter your email',
+        },
+        fr: {
+          nav_home: 'Accueil', nav_about: 'À propos', nav_platform: 'Plateforme',
+          nav_beta: 'Essayer', nav_careers: 'Carrières', nav_contact: 'Contact',
+          nav_survey: 'Commentaires bêta', nav_waitlist: 'Rejoindre la liste',
+          hero_title_1: 'Prêt à rendre les soins de santé',
+          hero_accessible: 'accessibles',
+          hero_achievable: 'réalisables',
+          hero_autonomous: 'autonomes',
+          hero_subtitle: 'Caribou Santé est votre compagnon de soins personnalisé qui aide les patients à gérer leur parcours de rétablissement avec des plans nutritionnels sur mesure, des rappels de médicaments et des conseils de physiothérapie — tout conçu selon vos besoins uniques.',
+          hero_cta_join: 'Rejoindre la liste d\'attente',
+          hero_cta_learn: 'En savoir plus',
+          hero_app_store: 'Bientôt sur l\'App Store',
+          hero_google_play: 'Bientôt sur Google Play',
+          about_title: 'Rendre les soins accessibles',
+          about_subtitle: 'Nous croyons que chaque patient mérite un compagnon de soins qui le rencontre là où il est.',
+          platform_title: 'Votre plateforme de soins complète',
+          platform_subtitle: 'Tout ce dont vous avez besoin pour gérer votre parcours de santé en un seul endroit.',
+          waitlist_title: 'Rejoindre la liste d\'attente',
+          waitlist_subtitle: 'Soyez parmi les premiers à découvrir les soins personnalisés avec Caribou Santé.',
+          contact_title: 'Nous contacter',
+          footer_rights: 'Caribou Soins de Santé Holistiques Inc. Tous droits réservés.',
+          footer_disclaimer: 'Caribou Santé est un outil de soutien aux soins et ne fournit pas de conseils médicaux, de diagnostic ou de traitement. Consultez toujours votre professionnel de la santé.',
+          footer_newsletter_title: 'Restez informé',
+          footer_newsletter_sub: 'Abonnez-vous à notre bulletin pour les dernières nouvelles.',
+          footer_subscribe: 'S\'abonner',
+          footer_email_placeholder: 'Entrez votre courriel',
+        }
+      },
+
+      t(key) {
+        const d = this.translations[this.language] || this.translations['en'];
+        return d[key] || this.translations['en'][key] || key;
+      },
+
+      apply() {
+        document.documentElement.lang = this.language === 'fr' ? 'fr-CA' : 'en';
+        document.querySelectorAll('[data-i18n-website]').forEach(el => {
+          const key = el.getAttribute('data-i18n-website');
+          if (key) el.textContent = this.t(key);
+        });
+        document.querySelectorAll('[data-i18n-website-placeholder]').forEach(el => {
+          el.placeholder = this.t(el.getAttribute('data-i18n-website-placeholder'));
+        });
+        const btn = document.getElementById('website-lang-btn');
+        if (btn) btn.textContent = this.language === 'en' ? 'FR' : 'EN';
+
+        // Update dynamic hero text
+        const heroTitle = document.querySelector('.hero-title');
+        if (heroTitle) {
+          heroTitle.innerHTML = `${this.t('hero_title_1')}\n                    <span class="highlight">${this.t('hero_accessible')}</span>,\n                    <span class="highlight">${this.t('hero_achievable')}</span>, and\n                    <span class="highlight">${this.t('hero_autonomous')}</span>?`;
+        }
+        const heroSub = document.querySelector('.hero-subtitle');
+        if (heroSub) heroSub.textContent = this.t('hero_subtitle');
+
+        // Footer
+        const footerRights = document.querySelector('.footer-bottom p:first-child');
+        if (footerRights) footerRights.textContent = this.t('footer_rights');
+        const footerDisclaimer = document.querySelector('.footer-bottom .disclaimer');
+        if (footerDisclaimer) footerDisclaimer.textContent = this.t('footer_disclaimer');
+
+        // Newsletter
+        const newsInput = document.querySelector('.newsletter-form input[type="email"]');
+        if (newsInput) newsInput.placeholder = this.t('footer_email_placeholder');
+        const newsBtn = document.querySelector('.newsletter-form button');
+        if (newsBtn) newsBtn.textContent = this.t('footer_subscribe');
+      }
+    };
+
+    function toggleWebsiteLanguage() {
+      WebsiteI18n.language = WebsiteI18n.language === 'en' ? 'fr' : 'en';
+      localStorage.setItem('caribou_website_lang', WebsiteI18n.language);
+      WebsiteI18n.apply();
+    }
+
+    // Apply on load
+    document.addEventListener('DOMContentLoaded', () => WebsiteI18n.apply());
+    if (document.readyState !== 'loading') WebsiteI18n.apply();
+    </script>
 </body>
 </html>
