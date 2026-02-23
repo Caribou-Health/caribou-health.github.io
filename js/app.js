@@ -1150,9 +1150,7 @@ async function handleApplicationSubmit(e) {
     }
 
     // Method 2: Submit to Apps Script Web App (creates ClickUp task)
-    // Note: Apps Script 302 redirects convert POST to GET, so we send
-    // the form data as a JSON-encoded ?data= query parameter via GET.
-    // File attachments are excluded (too large for URLs) - users email them separately.
+    // then upload file attachments to ClickUp via caribou-api proxy
     if (APPLICATION_FORM_CONFIG.appsScriptUrl) {
         try {
             const payload = {
@@ -1167,34 +1165,51 @@ async function handleApplicationSubmit(e) {
             const dataParam = encodeURIComponent(JSON.stringify(payload));
             const url = APPLICATION_FORM_CONFIG.appsScriptUrl + '?data=' + dataParam;
 
-            fetch(url, { redirect: 'follow' })
-            .then(resp => {
-                if (resp.ok) return resp.json();
-                throw new Error('Apps Script responded with status ' + resp.status);
-            }).then(data => {
-                console.log('Apps Script submission success:', data);
-            }).catch(err => {
-                console.warn('Apps Script submission error:', err);
-            });
+            // Await task creation so we get the taskId for file uploads
+            const resp = await fetch(url, { redirect: 'follow' });
+            if (!resp.ok) throw new Error('Apps Script responded with status ' + resp.status);
+            const result = await resp.json();
+            console.log('Apps Script submission success:', result);
+
+            // Upload file attachments to ClickUp via caribou-api proxy
+            if (fileData.length > 0 && result.taskId) {
+                submitBtn.textContent = 'Uploading documents...';
+                try {
+                    const attachResp = await fetch('https://caribou-api-912857703569.northamerica-northeast1.run.app/api/clickup/attachment', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            taskId: result.taskId,
+                            files: fileData
+                        })
+                    });
+                    if (attachResp.ok) {
+                        const attachResult = await attachResp.json();
+                        console.log('File attachment success:', attachResult);
+                    } else {
+                        console.warn('File attachment failed:', attachResp.status);
+                    }
+                } catch (attachErr) {
+                    console.warn('File attachment error:', attachErr);
+                }
+            }
         } catch (err) {
-            console.warn('Apps Script fetch error:', err);
+            console.warn('Apps Script submission error:', err);
         }
     }
 
-    // Show success after brief delay (form data is being sent in background)
-    setTimeout(() => {
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit Application';
-        form.style.display = 'none';
-        document.getElementById('applicationFormSuccess').style.display = 'block';
+    // Show success
+    submitBtn.classList.remove('loading');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit Application';
+    form.style.display = 'none';
+    document.getElementById('applicationFormSuccess').style.display = 'block';
 
-        if (fileData.length > 0) {
-            showToast(`Application submitted with ${fileData.length} document(s)!`, 'success');
-        } else {
-            showToast('Application submitted successfully!', 'success');
-        }
-    }, 2000);
+    if (fileData.length > 0) {
+        showToast(`Application submitted with ${fileData.length} document(s)!`, 'success');
+    } else {
+        showToast('Application submitted successfully!', 'success');
+    }
 }
 
 // ============================================
