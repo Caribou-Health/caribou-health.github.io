@@ -1014,7 +1014,7 @@ const APPLICATION_FORM_CONFIG = {
         deadline: 'entry.1616421931',
         howHeard: 'entry.174526948'
     },
-    appsScriptUrl: 'https://script.google.com/macros/s/AKfycbxavwYzEiGk_MmWUonwlz0MIEDHEAG5xCn5h8aa9zrrdv4uM4UuqlPyVK7n3g982E3Drg/exec'
+    appsScriptUrl: 'https://script.google.com/macros/s/AKfycbx-1PUwyaJmmkuPN10x4BVnZjiJWVzWEhyLa6yLYaP_qpwRYwjupAe-EzoeBFQYTL1H/exec'
 };
 
 // Role label mapping - must match ROLE_MAP keys in ClickUpBridge.gs
