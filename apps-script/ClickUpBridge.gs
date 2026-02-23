@@ -1,26 +1,21 @@
 /**
  * Caribou Health - Job Application to ClickUp Bridge
  * Google Apps Script Web App
+ * Deployed under: curahealthteam@gmail.com
  *
  * SETUP INSTRUCTIONS:
- * 1. Go to https://script.google.com and create a new project
- * 2. Paste this entire file into Code.gs
- * 3. First, run setupForm() to create the Google Form
- *    - Click the function dropdown (says "setupForm") and click Run
- *    - Authorize when prompted
- *    - Check the Execution Log for the form URL and entry IDs
- * 4. Go to Project Settings (gear icon) > Script Properties
+ * 1. Go to https://script.google.com (logged in as curahealthteam@gmail.com)
+ * 2. Open the "Caribou ClickUp Bridge" project (or create new and paste this)
+ * 3. Go to Project Settings (gear icon) > Script Properties
  *    - Add property: CLICKUP_API_TOKEN = your ClickUp API token
  *    - Get your token from: ClickUp > Settings > Apps > API Token
- * 5. Deploy as Web App:
+ * 4. Deploy as Web App:
  *    - Click Deploy > New Deployment
  *    - Type: Web app
  *    - Execute as: Me
  *    - Who has access: Anyone
  *    - Click Deploy and copy the URL
- * 6. Update APPS_SCRIPT_URL in your website's js/app.js
- * 7. Update the GOOGLE_FORM entry IDs in js/app.js with the ones
- *    from the setupForm() execution log
+ * 5. Update appsScriptUrl in website's js/app.js with the new URL
  */
 
 // ClickUp Configuration
