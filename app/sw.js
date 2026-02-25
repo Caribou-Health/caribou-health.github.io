@@ -42,7 +42,7 @@ self.addEventListener('activate', event => {
 // Fetch - cache-first strategy for app assets
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
-  if (event.request.url.includes('/api/')) return; // Don't cache API calls
+  if (event.request.url.includes('/api/')) return;
   
   event.respondWith(
     caches.match(event.request).then(cached => {
@@ -62,16 +62,9 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// Push notification handler
 self.addEventListener('push', event => {
   let data = { title: 'Caribou Health', body: 'You have a care plan reminder' };
-  
-  try {
-    data = event.data ? event.data.json() : data;
-  } catch (e) {
-    data.body = event.data?.text() || data.body;
-  }
-  
+  try { data = event.data ? event.data.json() : data; } catch (e) { data.body = event.data?.text() || data.body; }
   event.waitUntil(
     self.registration.showNotification(data.title, {
       body: data.body,
@@ -88,25 +81,19 @@ self.addEventListener('push', event => {
   );
 });
 
-// Notification click handler
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  
   if (event.action === 'dismiss') return;
-  
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clientList => {
       for (const client of clientList) {
-        if (client.url.includes('/app/') && 'focus' in client) {
-          return client.focus();
-        }
+        if (client.url.includes('/app/') && 'focus' in client) return client.focus();
       }
       return clients.openWindow('/app/');
     })
   );
 });
 
-// Message handler (from main app)
 self.addEventListener('message', event => {
   if (event.data?.type === 'SHOW_NOTIFICATION') {
     self.registration.showNotification(event.data.title, {
@@ -118,7 +105,6 @@ self.addEventListener('message', event => {
   }
 });
 
-// Periodic background sync for scheduled notifications
 self.addEventListener('periodicsync', event => {
   if (event.tag === 'caribou-reminders') {
     event.waitUntil(checkAndSendScheduledNotifications());
@@ -126,10 +112,6 @@ self.addEventListener('periodicsync', event => {
 });
 
 async function checkAndSendScheduledNotifications() {
-  // Check stored scheduled notifications
   const clients_list = await clients.matchAll();
-  if (clients_list.length > 0) return; // App is open, let it handle notifications
-  
-  // Would check scheduled notifications from IndexedDB here in production
-  // For now, rely on app-side scheduling
+  if (clients_list.length > 0) return;
 }
