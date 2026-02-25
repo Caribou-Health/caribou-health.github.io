@@ -2768,6 +2768,17 @@ section {
     font-weight: 600;
 }
 
+/* Field validation error highlight */
+.field-error {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
+}
+
+.field-error::placeholder {
+    color: #ef4444 !important;
+    opacity: 0.7;
+}
+
 /* ClickUp Form Container */
 .clickup-form-container {
     min-height: 550px;

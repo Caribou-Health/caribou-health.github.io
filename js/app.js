@@ -1002,20 +1002,8 @@ function updateFileList(files, container) {
     });
 }
 
-// Application Form Configuration
-// After running setupForm() in Apps Script, replace these with your actual values:
-const APPLICATION_FORM_CONFIG = {
-    formUrl: 'https://docs.google.com/forms/d/e/1b7ZUaXwD7ZG-0ruTIuJ5zOJtejUzmvQ471TYJC3NTMI/formResponse',
-    fields: {
-        name: 'entry.1136904062',
-        email: 'entry.351461911',
-        role: 'entry.321013124',
-        coverLetter: 'entry.1305207623',
-        deadline: 'entry.1616421931',
-        howHeard: 'entry.174526948'
-    },
-    appsScriptUrl: 'https://script.google.com/macros/s/AKfycbx-1PUwyaJmmkuPN10x4BVnZjiJWVzWEhyLa6yLYaP_qpwRYwjupAe-EzoeBFQYTL1H/exec'
-};
+// Application API Configuration
+const APPLICATION_API_URL = 'https://caribou-api-912857703569.northamerica-northeast1.run.app';
 
 // Role label mapping - must match ROLE_MAP keys in ClickUpBridge.gs
 const ROLE_LABELS = {
@@ -1052,26 +1040,45 @@ async function handleApplicationSubmit(e) {
     const howHeard = form.querySelector('#app-how-heard').value;
     const files = form.querySelector('#app-documents').files;
 
+    // Clear previous validation highlights
+    form.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+
     // Validation
-    if (!name || !email || !role) {
-        showToast('Please fill in all required fields.', 'error');
+    let hasErrors = false;
+
+    if (!name) {
+        form.querySelector('#app-name').classList.add('field-error');
+        hasErrors = true;
+    }
+
+    if (!email) {
+        form.querySelector('#app-email').classList.add('field-error');
+        hasErrors = true;
+    } else if (!isValidEmail(email)) {
+        form.querySelector('#app-email').classList.add('field-error');
+        showToast('Please enter a valid email address (e.g. name@example.com).', 'error');
         return;
     }
 
-    if (!isValidEmail(email)) {
-        showToast('Please enter a valid email address.', 'error');
-        return;
+    if (!role) {
+        form.querySelector('#app-role').classList.add('field-error');
+        hasErrors = true;
     }
 
     if (!files || files.length === 0) {
-        showToast('Please upload your resume/documents.', 'error');
+        form.querySelector('.file-drop-zone').classList.add('field-error');
+        hasErrors = true;
+    }
+
+    if (hasErrors) {
+        showToast('Please fill in all required fields (marked with *).', 'error');
         return;
     }
 
     // Show loading state
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
-    submitBtn.textContent = files.length > 0 ? 'Uploading documents...' : 'Submitting...';
+    submitBtn.textContent = 'Uploading documents...';
 
     // Convert files to base64 for upload
     let fileData = [];
@@ -1097,65 +1104,8 @@ async function handleApplicationSubmit(e) {
         }
     }
 
-    // Method 1: Submit to Google Form via hidden iframe (data backup - no files)
-    if (APPLICATION_FORM_CONFIG.formUrl && APPLICATION_FORM_CONFIG.fields.name) {
-        try {
-            const iframeName = 'app-form-iframe-' + Date.now();
-            const iframe = document.createElement('iframe');
-            iframe.name = iframeName;
-            iframe.style.cssText = 'position:absolute;width:0;height:0;border:0;left:-9999px;';
-            document.body.appendChild(iframe);
-
-            const googleForm = document.createElement('form');
-            googleForm.method = 'POST';
-            googleForm.action = APPLICATION_FORM_CONFIG.formUrl;
-            googleForm.target = iframeName;
-            googleForm.style.display = 'none';
-
-            const roleLabel = ROLE_LABELS[role] || role;
-            const sourceLabel = SOURCE_LABELS[howHeard] || howHeard || '';
-
-            const fields = [
-                { name: APPLICATION_FORM_CONFIG.fields.name, value: name },
-                { name: APPLICATION_FORM_CONFIG.fields.email, value: email },
-                { name: APPLICATION_FORM_CONFIG.fields.role, value: roleLabel },
-                { name: APPLICATION_FORM_CONFIG.fields.coverLetter, value: coverLetter },
-                { name: APPLICATION_FORM_CONFIG.fields.howHeard, value: sourceLabel }
-            ];
-
-            // Date fields in Google Forms need _year, _month, _day suffixes
-            if (deadline && APPLICATION_FORM_CONFIG.fields.deadline) {
-                const d = new Date(deadline);
-                fields.push({ name: APPLICATION_FORM_CONFIG.fields.deadline + '_year', value: d.getFullYear() });
-                fields.push({ name: APPLICATION_FORM_CONFIG.fields.deadline + '_month', value: d.getMonth() + 1 });
-                fields.push({ name: APPLICATION_FORM_CONFIG.fields.deadline + '_day', value: d.getDate() });
-            }
-
-            fields.forEach(field => {
-                if (field.name && field.value) {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = field.name;
-                    input.value = field.value;
-                    googleForm.appendChild(input);
-                }
-            });
-
-            document.body.appendChild(googleForm);
-            googleForm.submit();
-
-            // Clean up after submission
-            setTimeout(() => {
-                iframe.remove();
-                googleForm.remove();
-            }, 3000);
-        } catch (err) {
-            console.warn('Google Form submission error:', err);
-        }
-    }
-
-    // Method 2: Submit to caribou-api (creates ClickUp task directly — no CORS issues)
-    const API_BASE = 'https://caribou-api-912857703569.northamerica-northeast1.run.app';
+    // Submit to caribou-api (creates ClickUp task + Firestore backup)
+    let submissionSuccess = false;
     try {
         const payload = {
             name: name,
@@ -1166,7 +1116,7 @@ async function handleApplicationSubmit(e) {
             howHeard: SOURCE_LABELS[howHeard] || howHeard || ''
         };
 
-        const resp = await fetch(`${API_BASE}/api/careers/apply`, {
+        const resp = await fetch(`${APPLICATION_API_URL}/api/careers/apply`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -1179,12 +1129,12 @@ async function handleApplicationSubmit(e) {
 
         const result = await resp.json();
         console.log('Application submitted to ClickUp:', result);
+        submissionSuccess = true;
 
         // Upload file attachments to ClickUp via caribou-api proxy
         if (fileData.length > 0 && result.taskId) {
-            submitBtn.textContent = 'Uploading documents...';
             try {
-                const attachResp = await fetch(`${API_BASE}/api/clickup/attachment`, {
+                const attachResp = await fetch(`${APPLICATION_API_URL}/api/clickup/attachment`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -1193,8 +1143,7 @@ async function handleApplicationSubmit(e) {
                     })
                 });
                 if (attachResp.ok) {
-                    const attachResult = await attachResp.json();
-                    console.log('File attachment success:', attachResult);
+                    console.log('File attachment success:', await attachResp.json());
                 } else {
                     console.warn('File attachment failed:', attachResp.status);
                 }
@@ -1204,20 +1153,22 @@ async function handleApplicationSubmit(e) {
         }
     } catch (err) {
         console.error('Application submission error:', err);
-        // Don't block form success — Google Form backup already captured the data
+        submissionSuccess = false;
     }
 
-    // Show success
+    // Reset button state
     submitBtn.classList.remove('loading');
     submitBtn.disabled = false;
     submitBtn.textContent = 'Submit Application';
-    form.style.display = 'none';
-    document.getElementById('applicationFormSuccess').style.display = 'block';
 
-    if (fileData.length > 0) {
-        showToast(`Application submitted with ${fileData.length} document(s)!`, 'success');
+    if (submissionSuccess) {
+        form.style.display = 'none';
+        document.getElementById('applicationFormSuccess').style.display = 'block';
+        showToast(fileData.length > 0
+            ? `Application submitted with ${fileData.length} document(s)!`
+            : 'Application submitted successfully!', 'success');
     } else {
-        showToast('Application submitted successfully!', 'success');
+        showToast('There was an issue submitting your application. Please email your application to careers@caribouhealth.ca instead.', 'error');
     }
 }
 

@@ -604,7 +604,7 @@
 
                     <div class="form-group">
                         <label for="app-email" data-i18n-key="form_email_label">Email Address <span class="required">*</span></label>
-                        <input type="email" id="app-email" name="email" placeholder="Enter your email" required>
+                        <input type="email" id="app-email" name="email" placeholder="Enter your email" required pattern="[^@\s]+@[^@\s]+\.[^@\s]+">
                     </div>
 
                     <div class="form-group">
@@ -631,7 +631,7 @@
                                 <line x1="12" y1="3" x2="12" y2="15"/>
                             </svg>
                             <p data-i18n-key="form_documents_placeholder">Drop files here or click to upload</p>
-                            <input type="file" id="app-documents" name="documents" multiple accept=".pdf,.doc,.docx,.txt,.rtf,.png,.jpg,.jpeg" required style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
+                            <input type="file" id="app-documents" name="documents" multiple accept=".pdf,.doc,.docx,.txt,.rtf,.png,.jpg,.jpeg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
                         </div>
                         <div class="file-list"></div>
                     </div>
