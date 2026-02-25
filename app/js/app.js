@@ -11834,8 +11834,24 @@ async function handleSignup(event) {
     return;
   }
 
-  if (password.length < 6) {
-    alert('Password must be at least 6 characters.');
+  if (password.length < 7) {
+    alert('Password must be at least 7 characters.');
+    return;
+  }
+  if (!/[A-Z]/.test(password)) {
+    alert('Password must contain at least one uppercase letter.');
+    return;
+  }
+  if (!/[a-z]/.test(password)) {
+    alert('Password must contain at least one lowercase letter.');
+    return;
+  }
+  if (!/[0-9]/.test(password)) {
+    alert('Password must contain at least one number.');
+    return;
+  }
+  if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+    alert('Password must contain at least one special character.');
     return;
   }
 
@@ -11941,11 +11957,41 @@ async function handleGoogleSignIn() {
     return;
   }
 
+  // Check if terms checkbox exists and is checked (for signup mode)
+  const termsCheckbox = document.getElementById('signup-terms');
+  const signupForm = document.getElementById('signup-form');
+  const isSignupVisible = signupForm && signupForm.style.display !== 'none';
+
+  // If we're on signup view OR user hasn't accepted terms yet, require acceptance
+  if (isSignupVisible && termsCheckbox && !termsCheckbox.checked) {
+    alert('Please agree to the Terms of Service and Privacy Policy before signing in with Google.');
+    termsCheckbox.focus();
+    return;
+  }
+
+  // For login view, still show a confirmation if user hasn't previously accepted
+  if (!isSignupVisible) {
+    const hasAcceptedTerms = localStorage.getItem('caribou_terms_accepted');
+    if (!hasAcceptedTerms) {
+      const accepted = confirm('By signing in with Google, you agree to the Caribou Health Terms of Service and Privacy Policy. You understand that Caribou provides holistic wellness plans to complement, not replace, professional medical care.\n\nDo you agree?');
+      if (!accepted) return;
+      localStorage.setItem('caribou_terms_accepted', new Date().toISOString());
+    }
+  } else {
+    localStorage.setItem('caribou_terms_accepted', new Date().toISOString());
+  }
+
   const btn = document.querySelector('.google-signin-btn');
   if (btn) { btn.disabled = true; btn.innerHTML = '<span>Signing in...</span>'; }
 
   try {
     const result = await AuthService.signInWithGoogle();
+
+    // If redirecting (fallback method), show message and wait
+    if (result.redirecting) {
+      if (btn) { btn.innerHTML = '<span>Redirecting to Google...</span>'; }
+      return;
+    }
 
     if (!result.success) {
       alert(result.error || 'Google Sign-In failed. Please try again.');

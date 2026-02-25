@@ -30,6 +30,9 @@
                 <li class="nav-item"><a href="/careers" class="nav-link active">Careers</a></li>
                 <li class="nav-item"><a href="/#contact" class="nav-link">Contact</a></li>
                 <li class="nav-item"><a href="/#waitlist" class="nav-link nav-cta">Join Waitlist</a></li>
+                <li style="list-style: none;">
+                    <button id="page-lang-btn" onclick="togglePageLanguage()" style="border:1.5px solid #4A9B9B;color:#4A9B9B;background:transparent;border-radius:20px;padding:5px 14px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:0.04em;">FR</button>
+                </li>
             </ul>
         </div>
     </nav>
@@ -37,10 +40,10 @@
     <!-- Careers Hero Section -->
     <section class="careers-hero">
         <div class="container">
-            <h1>Join Our Team</h1>
-            <p>Help us transform patient care through personalized, holistic wellness solutions</p>
-            <p class="careers-contact">Have questions? Reach out to us at <a href="mailto:careers@caribouhealth.ca">careers@caribouhealth.ca</a></p>
-            <a href="#apply-section" class="btn btn-primary careers-apply-btn">Apply Now</a>
+            <h1 data-i18n-key="hero_title">Join Our Team</h1>
+            <p data-i18n-key="hero_subtitle">Help us transform patient care through personalized, holistic wellness solutions</p>
+            <p class="careers-contact" data-i18n-key="hero_contact">Have questions? Reach out to us at <a href="mailto:careers@caribouhealth.ca">careers@caribouhealth.ca</a></p>
+            <a href="#apply-section" class="btn btn-primary careers-apply-btn" data-i18n-key="apply_now_btn">Apply Now</a>
         </div>
     </section>
 
@@ -49,12 +52,12 @@
         <div class="container">
             <!-- Unpaid Disclaimer -->
             <div class="unpaid-disclaimer">
-                <p><strong>Important Notice:</strong> Though these roles are currently unpaid, we are working on multiple avenues to secure funding for these positions and will keep qualified candidates updated as to any developments on this front.</p>
+                <p data-i18n-key="unpaid_notice"><strong>Important Notice:</strong> Though these roles are currently unpaid, we are working on multiple avenues to secure funding for these positions and will keep qualified candidates updated as to any developments on this front.</p>
             </div>
 
             <!-- Public Health Practicum Student -->
             <div id="public-health-practicum" class="job-detail-section">
-                <h2>Public Health Practicum Student</h2>
+                <h2 data-i18n-key="job1_title">Public Health Practicum Student</h2>
                 <div class="job-detail-content">
                     <div class="job-meta">
                         <div class="job-meta-item">
@@ -143,7 +146,7 @@
 
             <!-- Software Engineering / AI Intern -->
             <div id="software-intern" class="job-detail-section">
-                <h2>Software Engineering / AI Training Intern</h2>
+                <h2 data-i18n-key="job2_title">Software Engineering / AI Training Intern</h2>
                 <div class="job-detail-content">
                     <div class="job-meta">
                         <div class="job-meta-item">
@@ -219,7 +222,7 @@
 
             <!-- Creative Design Intern -->
             <div id="creative-intern" class="job-detail-section">
-                <h2>Creative Design Intern</h2>
+                <h2 data-i18n-key="job3_title">Creative Design Intern</h2>
                 <div class="job-detail-content">
                     <div class="job-meta">
                         <div class="job-meta-item">
@@ -295,7 +298,7 @@
 
             <!-- Technology & Development Lead -->
             <div id="tech-lead" class="job-detail-section">
-                <h2>Technology & Development Lead</h2>
+                <h2 data-i18n-key="job4_title">Technology & Development Lead</h2>
                 <div class="job-detail-content">
                     <div class="job-meta">
                         <div class="job-meta-item">
@@ -368,7 +371,7 @@
 
             <!-- Clinical Advisor -->
             <div id="clinical-advisor" class="job-detail-section">
-                <h2>Clinical Advisor</h2>
+                <h2 data-i18n-key="job5_title">Clinical Advisor</h2>
                 <div class="job-detail-content">
                     <div class="job-meta">
                         <div class="job-meta-item">
@@ -443,7 +446,7 @@
 
             <!-- Business Development & Partnerships Lead -->
             <div id="business-development" class="job-detail-section">
-                <h2>Business Development & Partnerships Lead</h2>
+                <h2 data-i18n-key="job6_title">Business Development & Partnerships Lead</h2>
                 <div class="job-detail-content">
                     <div class="job-meta">
                         <div class="job-meta-item">
@@ -512,7 +515,7 @@
 
             <!-- Community & Content Manager -->
             <div id="content-manager" class="job-detail-section">
-                <h2>Community & Content Manager</h2>
+                <h2 data-i18n-key="job7_title">Community & Content Manager</h2>
                 <div class="job-detail-content">
                     <div class="job-meta">
                         <div class="job-meta-item">
@@ -582,7 +585,7 @@
 
             <!-- Diversity Statement -->
             <div class="diversity-statement">
-                <p>As a women-led start-up, we are committed to building an inclusive and diverse team grounded in unique perspectives. We welcome and encourage applicants from historically underrepresented groups who are passionate about innovation in health technology.</p>
+                <p data-i18n-key="diversity_statement">As a women-led start-up, we are committed to building an inclusive and diverse team grounded in unique perspectives. We welcome and encourage applicants from historically underrepresented groups who are passionate about innovation in health technology.</p>
             </div>
         </div>
     </section>
@@ -590,24 +593,24 @@
     <!-- Apply Section -->
     <section id="apply-section" class="apply-section">
         <div class="container">
-            <h2>Apply Now</h2>
-            <p class="apply-section-intro">Submit your application through the form below. We review applications on a rolling basis and will be in touch with any questions or next steps.</p>
+            <h2 data-i18n-key="apply_section_title">Apply Now</h2>
+            <p class="apply-section-intro" data-i18n-key="apply_section_intro">Submit your application through the form below. We review applications on a rolling basis and will be in touch with any questions or next steps.</p>
             <div class="application-form-container">
                 <form id="applicationForm" class="application-form">
                     <div class="form-group">
-                        <label for="app-name">Full Name <span class="required">*</span></label>
+                        <label for="app-name" data-i18n-key="form_name_label">Full Name <span class="required">*</span></label>
                         <input type="text" id="app-name" name="name" placeholder="Enter your full legal name" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="app-email">Email Address <span class="required">*</span></label>
+                        <label for="app-email" data-i18n-key="form_email_label">Email Address <span class="required">*</span></label>
                         <input type="email" id="app-email" name="email" placeholder="Enter your email" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="app-role">Open Role <span class="required">*</span></label>
+                        <label for="app-role" data-i18n-key="form_role_label">Open Role <span class="required">*</span></label>
                         <select id="app-role" name="role" required>
-                            <option value="">Select a role</option>
+                            <option value="" data-i18n-key="form_role_placeholder">Select a role</option>
                             <option value="public-health">Public Health Practicum Student</option>
                             <option value="software-intern">Software Engineering / AI Training Intern</option>
                             <option value="creative-intern">Creative Design Intern</option>
@@ -619,35 +622,35 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="app-documents">Resume & Documents <span class="required">*</span></label>
-                        <p class="form-sublabel">Attach your resume and any additional documents (cover letter, writing samples, projects, transcripts, etc). PDF submissions preferred.</p>
+                        <label for="app-documents" data-i18n-key="form_documents_label">Resume & Documents <span class="required">*</span></label>
+                        <p class="form-sublabel" data-i18n-key="form_documents_sublabel">Attach your resume and any additional documents (cover letter, writing samples, projects, transcripts, etc). PDF submissions preferred.</p>
                         <div class="file-drop-zone" style="position: relative; cursor: pointer;">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                 <polyline points="17 8 12 3 7 8"/>
                                 <line x1="12" y1="3" x2="12" y2="15"/>
                             </svg>
-                            <p>Drop files here or click to upload</p>
+                            <p data-i18n-key="form_documents_placeholder">Drop files here or click to upload</p>
                             <input type="file" id="app-documents" name="documents" multiple accept=".pdf,.doc,.docx,.txt,.rtf,.png,.jpg,.jpeg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;">
                         </div>
                         <div class="file-list"></div>
                     </div>
 
                     <div class="form-group">
-                        <label for="app-cover-letter">Cover Letter</label>
-                        <textarea id="app-cover-letter" name="cover-letter" placeholder="Paste your cover letter here if not included as an attachment above" rows="5"></textarea>
+                        <label for="app-cover-letter" data-i18n-key="form_cover_letter_label">Cover Letter</label>
+                        <textarea id="app-cover-letter" name="cover-letter" placeholder="Paste your cover letter here if not included as an attachment above" rows="5" data-i18n-key="form_cover_letter_placeholder"></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label for="app-deadline">Application Deadline</label>
-                        <p class="form-sublabel">If there are any specific deadlines you are working within, please include the latest date below.</p>
+                        <label for="app-deadline" data-i18n-key="form_deadline_label">Application Deadline</label>
+                        <p class="form-sublabel" data-i18n-key="form_deadline_sublabel">If there are any specific deadlines you are working within, please include the latest date below.</p>
                         <input type="date" id="app-deadline" name="deadline">
                     </div>
 
                     <div class="form-group">
-                        <label for="app-how-heard">How did you hear about us?</label>
+                        <label for="app-how-heard" data-i18n-key="form_how_heard_label">How did you hear about us?</label>
                         <select id="app-how-heard" name="how-heard">
-                            <option value="">Select an option</option>
+                            <option value="" data-i18n-key="form_how_heard_placeholder">Select an option</option>
                             <option value="linkedin">LinkedIn</option>
                             <option value="university">University/College</option>
                             <option value="referral">Friend/Referral</option>
@@ -657,7 +660,7 @@
                         </select>
                     </div>
 
-                    <button type="submit" class="btn btn-primary form-submit-btn">Submit Application</button>
+                    <button type="submit" class="btn btn-primary form-submit-btn" data-i18n-key="form_submit_btn">Submit Application</button>
                 </form>
 
                 <div id="applicationFormSuccess" class="form-success" style="display: none;">
@@ -666,9 +669,9 @@
                             <polyline points="20 6 9 17 4 12"/>
                         </svg>
                     </div>
-                    <h3>Application Submitted!</h3>
-                    <p>Thank you for applying! We'll review your application and get back to you soon.</p>
-                    <p class="form-note">If you uploaded documents, please also email them to <strong>careers@caribouhealth.ca</strong> with your name as the subject line to ensure we receive them.</p>
+                    <h3 data-i18n-key="form_success_title">Application Submitted!</h3>
+                    <p data-i18n-key="form_success_message">Thank you for applying! We'll review your application and get back to you soon.</p>
+                    <p class="form-note" data-i18n-key="form_success_note">If you uploaded documents, please also email them to <strong>careers@caribouhealth.ca</strong> with your name as the subject line to ensure we receive them.</p>
                 </div>
             </div>
         </div>
@@ -720,12 +723,115 @@
             </div>
 
             <div class="footer-bottom">
-                <p>Caribou Holistic Healthcare Inc. All rights reserved.</p>
-                <p class="disclaimer">Caribou Health is a care support tool and does not provide medical advice, diagnosis, or treatment. Always consult your healthcare provider.</p>
+                <p data-i18n-key="footer_1">Caribou Holistic Healthcare Inc. All rights reserved.</p>
+                <p class="disclaimer" data-i18n-key="footer_2">Caribou Health is a care support tool and does not provide medical advice, diagnosis, or treatment. Always consult your healthcare provider.</p>
             </div>
         </div>
     </footer>
 
     <script src="/js/app.js"></script>
+
+    <script>
+const pageTranslations = {
+  en: {
+    hero_title: 'Join Our Team',
+    hero_subtitle: 'Help us transform patient care through personalized, holistic wellness solutions',
+    hero_contact: 'Have questions? Reach out to us at <a href="mailto:careers@caribouhealth.ca">careers@caribouhealth.ca</a>',
+    apply_now_btn: 'Apply Now',
+    unpaid_notice: '<strong>Important Notice:</strong> Though these roles are currently unpaid, we are working on multiple avenues to secure funding for these positions and will keep qualified candidates updated as to any developments on this front.',
+    job1_title: 'Public Health Practicum Student',
+    job2_title: 'Software Engineering / AI Training Intern',
+    job3_title: 'Creative Design Intern',
+    job4_title: 'Technology & Development Lead',
+    job5_title: 'Clinical Advisor',
+    job6_title: 'Business Development & Partnerships Lead',
+    job7_title: 'Community & Content Manager',
+    diversity_statement: 'As a women-led start-up, we are committed to building an inclusive and diverse team grounded in unique perspectives. We welcome and encourage applicants from historically underrepresented groups who are passionate about innovation in health technology.',
+    apply_section_title: 'Apply Now',
+    apply_section_intro: 'Submit your application through the form below. We review applications on a rolling basis and will be in touch with any questions or next steps.',
+    form_name_label: 'Full Name',
+    form_email_label: 'Email Address',
+    form_role_label: 'Open Role',
+    form_role_placeholder: 'Select a role',
+    form_documents_label: 'Resume & Documents',
+    form_documents_sublabel: 'Attach your resume and any additional documents (cover letter, writing samples, projects, transcripts, etc). PDF submissions preferred.',
+    form_documents_placeholder: 'Drop files here or click to upload',
+    form_cover_letter_label: 'Cover Letter',
+    form_cover_letter_placeholder: 'Paste your cover letter here if not included as an attachment above',
+    form_deadline_label: 'Application Deadline',
+    form_deadline_sublabel: 'If there are any specific deadlines you are working within, please include the latest date below.',
+    form_how_heard_label: 'How did you hear about us?',
+    form_how_heard_placeholder: 'Select an option',
+    form_submit_btn: 'Submit Application',
+    form_success_title: 'Application Submitted!',
+    form_success_message: 'Thank you for applying! We\'ll review your application and get back to you soon.',
+    form_success_note: 'If you uploaded documents, please also email them to <strong>careers@caribouhealth.ca</strong> with your name as the subject line to ensure we receive them.',
+    footer_1: 'Caribou Holistic Healthcare Inc. All rights reserved.',
+    footer_2: 'Caribou Health is a care support tool and does not provide medical advice, diagnosis, or treatment. Always consult your healthcare provider.'
+  },
+  fr: {
+    hero_title: 'Rejoignez notre équipe',
+    hero_subtitle: 'Aidez-nous à transformer les soins aux patients par le biais de solutions de bien-être personnalisées et holistiques',
+    hero_contact: 'Vous avez des questions ? Contactez-nous à <a href="mailto:careers@caribouhealth.ca">careers@caribouhealth.ca</a>',
+    apply_now_btn: 'Postuler maintenant',
+    unpaid_notice: '<strong>Avis important :</strong> Bien que ces postes soient actuellement non rémunérés, nous travaillons sur plusieurs voies pour sécuriser le financement de ces postes et garderons les candidats qualifiés informés de tout développement à ce sujet.',
+    job1_title: 'Étudiant praticien en santé publique',
+    job2_title: 'Stagiaire en génie logiciel / formation en IA',
+    job3_title: 'Stagiaire en design créatif',
+    job4_title: 'Responsable de la technologie et du développement',
+    job5_title: 'Conseiller clinique',
+    job6_title: 'Responsable du développement commercial et des partenariats',
+    job7_title: 'Gestionnaire communautaire et de contenu',
+    diversity_statement: 'En tant que start-up dirigée par des femmes, nous nous engageons à construire une équipe inclusive et diversifiée enracinée dans des perspectives uniques. Nous accueillons et encourageons les candidatures de groupes historiquement sous-représentés qui sont passionnés par l\'innovation en technologie de la santé.',
+    apply_section_title: 'Postuler maintenant',
+    apply_section_intro: 'Soumettez votre candidature via le formulaire ci-dessous. Nous examinons les candidatures de manière continue et nous vous contacterons pour toute question ou prochaine étape.',
+    form_name_label: 'Nom complet',
+    form_email_label: 'Adresse e-mail',
+    form_role_label: 'Poste ouvert',
+    form_role_placeholder: 'Sélectionner un rôle',
+    form_documents_label: 'CV et documents',
+    form_documents_sublabel: 'Joignez votre CV et tous les documents supplémentaires (lettre de motivation, exemples d\'écriture, projets, relevés de notes, etc.). Les soumissions en PDF sont préférées.',
+    form_documents_placeholder: 'Déposez les fichiers ici ou cliquez pour télécharger',
+    form_cover_letter_label: 'Lettre de présentation',
+    form_cover_letter_placeholder: 'Collez votre lettre de présentation ici si elle n\'est pas jointe au-dessus',
+    form_deadline_label: 'Date limite de candidature',
+    form_deadline_sublabel: 'S\'il y a des dates limites spécifiques dont vous disposez, veuillez indiquer la date la plus tard ci-dessous.',
+    form_how_heard_label: 'Comment avez-vous entendu parler de nous ?',
+    form_how_heard_placeholder: 'Sélectionner une option',
+    form_submit_btn: 'Soumettre la candidature',
+    form_success_title: 'Candidature soumise !',
+    form_success_message: 'Merci d\'avoir postulé ! Nous examinerons votre candidature et vous recontacterons bientôt.',
+    form_success_note: 'Si vous avez téléchargé des documents, veuillez également les envoyer par e-mail à <strong>careers@caribouhealth.ca</strong> avec votre nom comme ligne d\'objet pour nous assurer que nous les recevons.',
+    footer_1: 'Caribou Holistic Healthcare Inc. Tous droits réservés.',
+    footer_2: 'Caribou Health est un outil de soutien aux soins et ne fournit pas de conseils médicaux, de diagnostic ou de traitement. Consultez toujours votre professionnel de la santé.'
+  }
+};
+
+let currentLang = localStorage.getItem('caribou_website_lang') || 'en';
+
+function applyPageTranslation() {
+  const t = pageTranslations[currentLang];
+
+  const elements = document.querySelectorAll('[data-i18n-key]');
+  elements.forEach(el => {
+    const key = el.getAttribute('data-i18n-key');
+    if (t[key]) {
+      el.innerHTML = t[key];
+    }
+  });
+
+  document.documentElement.lang = currentLang === 'fr' ? 'fr-CA' : 'en';
+  const btn = document.getElementById('page-lang-btn');
+  if (btn) btn.textContent = currentLang === 'en' ? 'FR' : 'EN';
+}
+
+function togglePageLanguage() {
+  currentLang = currentLang === 'en' ? 'fr' : 'en';
+  localStorage.setItem('caribou_website_lang', currentLang);
+  applyPageTranslation();
+}
+
+document.addEventListener('DOMContentLoaded', applyPageTranslation);
+    </script>
 </body>
 </html>

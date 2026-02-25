@@ -112,6 +112,28 @@ const AuthService = {
       const app = initializeApp(BackendConfig.firebase);
       this.auth = getAuth(app);
 
+      // Check for redirect result (from signInWithRedirect fallback)
+      try {
+        const { getRedirectResult } = await import('https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js');
+        const redirectResult = await getRedirectResult(this.auth);
+        if (redirectResult && redirectResult.user) {
+          console.log('[AuthService] Redirect sign-in successful:', redirectResult.user.email);
+          const isNewUser = redirectResult._tokenResponse?.isNewUser;
+          if (isNewUser) {
+            await DataService.initialize();
+            await DataService.createUserProfile(redirectResult.user.uid, {
+              email: redirectResult.user.email,
+              displayName: redirectResult.user.displayName,
+              photoURL: redirectResult.user.photoURL,
+              createdAt: new Date().toISOString(),
+              tier: 'free'
+            });
+          }
+        }
+      } catch (redirectError) {
+        console.warn('[AuthService] No redirect result:', redirectError.message);
+      }
+
       onAuthStateChanged(this.auth, (user) => {
         this.currentUser = user;
         this.notifyListeners(user);
@@ -251,10 +273,29 @@ const AuthService = {
     }
 
     try {
-      const { GoogleAuthProvider, signInWithPopup } = await import('https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js');
+      const { GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult } = await import('https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js');
 
       const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(this.auth, provider);
+      provider.addScope('email');
+      provider.addScope('profile');
+
+      let result;
+      try {
+        // Try popup first (preferred for desktop)
+        result = await signInWithPopup(this.auth, provider);
+      } catch (popupError) {
+        console.warn('[AuthService] Popup sign-in failed, trying redirect:', popupError.code);
+        // If popup was blocked or failed, fall back to redirect
+        if (popupError.code === 'auth/popup-blocked' ||
+            popupError.code === 'auth/popup-closed-by-user' ||
+            popupError.code === 'auth/cancelled-popup-request') {
+          throw popupError; // Let user try again
+        }
+        // For "auth/internal-error" or "auth/invalid-action" type errors,
+        // try redirect approach as fallback
+        await signInWithRedirect(this.auth, provider);
+        return { success: true, redirecting: true };
+      }
 
       // Check if this is a new user
       const isNewUser = result._tokenResponse?.isNewUser;
@@ -270,7 +311,18 @@ const AuthService = {
 
       return { success: true, user: result.user, isNewUser };
     } catch (error) {
-      return { success: false, error: error.message };
+      console.error('[AuthService] Google Sign-In error:', error.code, error.message);
+      let userMessage = error.message;
+      if (error.code === 'auth/popup-closed-by-user') {
+        userMessage = 'Sign-in popup was closed. Please try again.';
+      } else if (error.code === 'auth/popup-blocked') {
+        userMessage = 'Pop-up was blocked by your browser. Please allow pop-ups for this site and try again.';
+      } else if (error.code === 'auth/unauthorized-domain') {
+        userMessage = 'This domain is not authorized for Google Sign-In. Please contact support.';
+      } else if (error.message && error.message.includes('invalid')) {
+        userMessage = 'Google Sign-In configuration error. Please ensure Google Sign-In is enabled in Firebase Console (Authentication > Sign-in method > Google).';
+      }
+      return { success: false, error: userMessage };
     }
   },
 

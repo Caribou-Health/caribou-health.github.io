@@ -1149,53 +1149,57 @@ async function handleApplicationSubmit(e) {
         }
     }
 
-    // Method 2: Submit to Apps Script Web App (creates ClickUp task)
-    // then upload file attachments to ClickUp via caribou-api proxy
-    if (APPLICATION_FORM_CONFIG.appsScriptUrl) {
-        try {
-            const payload = {
-                name: name,
-                email: email,
-                role: ROLE_LABELS[role] || role,
-                coverLetter: coverLetter,
-                deadline: deadline,
-                howHeard: SOURCE_LABELS[howHeard] || howHeard || ''
-            };
+    // Method 2: Submit to caribou-api (creates ClickUp task directly — no CORS issues)
+    const API_BASE = 'https://caribou-api-912857703569.northamerica-northeast1.run.app';
+    try {
+        const payload = {
+            name: name,
+            email: email,
+            role: ROLE_LABELS[role] || role,
+            coverLetter: coverLetter,
+            deadline: deadline,
+            howHeard: SOURCE_LABELS[howHeard] || howHeard || ''
+        };
 
-            const dataParam = encodeURIComponent(JSON.stringify(payload));
-            const url = APPLICATION_FORM_CONFIG.appsScriptUrl + '?data=' + dataParam;
+        const resp = await fetch(`${API_BASE}/api/careers/apply`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
 
-            // Await task creation so we get the taskId for file uploads
-            const resp = await fetch(url, { redirect: 'follow' });
-            if (!resp.ok) throw new Error('Apps Script responded with status ' + resp.status);
-            const result = await resp.json();
-            console.log('Apps Script submission success:', result);
-
-            // Upload file attachments to ClickUp via caribou-api proxy
-            if (fileData.length > 0 && result.taskId) {
-                submitBtn.textContent = 'Uploading documents...';
-                try {
-                    const attachResp = await fetch('https://caribou-api-912857703569.northamerica-northeast1.run.app/api/clickup/attachment', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            taskId: result.taskId,
-                            files: fileData
-                        })
-                    });
-                    if (attachResp.ok) {
-                        const attachResult = await attachResp.json();
-                        console.log('File attachment success:', attachResult);
-                    } else {
-                        console.warn('File attachment failed:', attachResp.status);
-                    }
-                } catch (attachErr) {
-                    console.warn('File attachment error:', attachErr);
-                }
-            }
-        } catch (err) {
-            console.warn('Apps Script submission error:', err);
+        if (!resp.ok) {
+            const errData = await resp.json().catch(() => ({}));
+            throw new Error(errData.error || 'Server responded with status ' + resp.status);
         }
+
+        const result = await resp.json();
+        console.log('Application submitted to ClickUp:', result);
+
+        // Upload file attachments to ClickUp via caribou-api proxy
+        if (fileData.length > 0 && result.taskId) {
+            submitBtn.textContent = 'Uploading documents...';
+            try {
+                const attachResp = await fetch(`${API_BASE}/api/clickup/attachment`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        taskId: result.taskId,
+                        files: fileData
+                    })
+                });
+                if (attachResp.ok) {
+                    const attachResult = await attachResp.json();
+                    console.log('File attachment success:', attachResult);
+                } else {
+                    console.warn('File attachment failed:', attachResp.status);
+                }
+            } catch (attachErr) {
+                console.warn('File attachment error:', attachErr);
+            }
+        }
+    } catch (err) {
+        console.error('Application submission error:', err);
+        // Don't block form success — Google Form backup already captured the data
     }
 
     // Show success
