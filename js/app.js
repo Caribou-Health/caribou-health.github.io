@@ -1063,6 +1063,11 @@ async function handleApplicationSubmit(e) {
         return;
     }
 
+    if (!files || files.length === 0) {
+        showToast('Please upload your resume/documents.', 'error');
+        return;
+    }
+
     // Show loading state
     submitBtn.classList.add('loading');
     submitBtn.disabled = true;
